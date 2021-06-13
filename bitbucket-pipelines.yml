@@ -16,6 +16,6 @@ pipelines:
               - npm install              
     - step:
         name: Deploy to production
-        deployment: production-east
+        deployment: production
         script:
             - node second.js
