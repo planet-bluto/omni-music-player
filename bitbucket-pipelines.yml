@@ -18,4 +18,4 @@ pipelines:
         name: Deploy to production
         deployment: production
         script:
-            - node second.js
+            - node main.js
