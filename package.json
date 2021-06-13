@@ -1,12 +1,12 @@
 {
-  "name": "websocket-test",
+  "name": "omni",
   "version": "1.0.0",
   "description": "",
   "main": "second.js",
   "scripts": {
-    "test": "node second.js"
+    "start": "node second.js"
   },
-  "author": "",
+  "author": "BluAxolotl",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
