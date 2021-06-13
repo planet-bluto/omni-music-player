@@ -13,5 +13,9 @@ pipelines:
             caches:
               - node
             script:
-              - npm install
-              - npm test
+              - npm install              
+    - step:
+        name: Deploy to production
+        deployment: production-east
+        script:
+            - node second.js
