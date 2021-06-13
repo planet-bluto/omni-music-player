@@ -1,0 +1,18 @@
+{
+  "name": "websocket-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "second.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^4.1.2",
+    "socket.io-stream": "^0.9.1",
+    "soundcloud-downloader": "^1.0.0",
+    "soundcloud-scraper": "^5.0.0"
+  }
+}
