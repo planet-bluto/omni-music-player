@@ -13,9 +13,10 @@ const SC_CLIENT_ID = "c7qRtooYX5D1QXCM7DmD1J4E7v5YcxpR"
 const SC_client = new SoundCloud.Client(SC_CLIENT_ID)
 
 class Song {
-	constructor(title, author, thumbnail, url, plays, id, stream_url) {
+	constructor(title, author, author_url, thumbnail, url, plays, id, stream_url) {
 		this.title = title
 		this.author = author
+		this.author_url = author_url
 		this.thumbnail = thumbnail
 		this.url = url
     this.plays = plays
@@ -36,7 +37,6 @@ io.on('connection', (socket) => {
   
     SC_client.search(query, "track")
     .then(async results => {
-      print(results.length)
       songAmount = results.length
       for (i = 0; i < 20; i++) {
         curr_result = results[i]
@@ -50,10 +50,8 @@ io.on('connection', (socket) => {
                 } else {
                   real_thumbnail = song.thumbnail
                 }
-                print(song.id)
-                songs.push(new Song(song.title, song.author.name, real_thumbnail, song.url, song.playCount, song.id, stream_url))
+                songs.push(new Song(song.title, song.author.name, song.author.url, real_thumbnail, song.url, song.playCount, song.id, stream_url))
                 loadedCount += 1
-                print(loadedCount)
                 if ((loadedCount) == songAmount) {
                   songs.sort(function(a, b){return b.plays-a.plays})
                   socket.emit('results', {songs: songs, query: query})
@@ -64,12 +62,6 @@ io.on('connection', (socket) => {
         }
       }
     })
-  })
-
-  socket.on('get_stream', (url) => {
-    print(url)
-    let stream_url = SoundCloud.Util.fetchSongStreamURL(url, SC_CLIENT_ID)
-    socket.emit('audio_stream', stream_url)
   })
 })
 
