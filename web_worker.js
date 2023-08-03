@@ -129,6 +129,6 @@ io.on("connection", async socket => {
   })
 })
 
-httpserver.listen(8080, "0.0.0.0", (e) => {
+httpserver.listen((process.env["PORT"] || 8080), "0.0.0.0", (e) => {
 	print("Server Listening!")
 })
