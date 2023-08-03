@@ -103,8 +103,7 @@ app.get("/", (req, res) => {
 
 io.on("connection", async socket => {
 	socket.on("tracks", () => {
-    //.slice(0, 500)
-		socket.emit("tracks", require("./soundcloud_likes.json"))
+		socket.emit("tracks", require("./soundcloud_likes.json").slice(0, 500))
 	})
 
   socket.on("nowplaying", (track, stateInfo) => {
