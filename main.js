@@ -1,3 +1,4 @@
+require('dotenv').config()
 global.print = console.log
 global.path = require('path')
 global.fs = require('fs')

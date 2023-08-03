@@ -112,8 +112,8 @@ async function play(omni_track, elem = null) {
 		"paused": false,
 		"elem": elem
 	}
-	PlayerSong.streams.start.volume = GLOBAL_VOLUME
-	PlayerSong.streams.mid.volume = GLOBAL_VOLUME
+	PlayingSong.streams.start.volume = GLOBAL_VOLUME
+	PlayingSong.streams.mid.volume = GLOBAL_VOLUME
 
 	Object.defineProperty(PlayingSong, "currentStream", {
 		get() {

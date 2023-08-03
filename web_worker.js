@@ -1,6 +1,6 @@
 // We need to find a way to manipulate streams betterrr
 var client
-var isLocal = (process.env["local"] != null && process.env["local"] = "true")
+var isLocal = (process.env["LOCAL"] != null && process.env["LOCAL"] == "true")
 if (isLocal) {
   client = require('discord-rich-presence')('1136427488495550494')
 }
@@ -103,7 +103,8 @@ app.get("/", (req, res) => {
 
 io.on("connection", async socket => {
 	socket.on("tracks", () => {
-		socket.emit("tracks", require("./soundcloud_likes.json").slice(0, 500))
+    //.slice(0, 500)
+		socket.emit("tracks", require("./soundcloud_likes.json"))
 	})
 
   socket.on("nowplaying", (track, stateInfo) => {
