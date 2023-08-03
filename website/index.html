@@ -1,0 +1,75 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<link href="icon.png" rel="icon" type="image/png" sizes="32x32" />
+	<title>Omni</title>
+	<style id="theme">
+		:root {
+			--theme-back: #151515;
+			--text-color: white;
+			--theme-back-pos: #252525;
+			--theme-back-pos2: #353535;
+			--theme-back-neg: #050505;
+			--theme-accent1-pos: #024aca;
+			--theme-accent1-neg: #00177D;
+			--theme-accent2-pos: #5BA8FF;
+			--theme-accent2-neg: #0A89FF;
+		}
+	</style>
+	<link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+		<!-- Top Bar -->
+		<div id="top-bar">
+			<button id="top-home"><span class="material-icons">home</span></button>
+			<button id="top-playlist"><span class="material-icons">video_library</span></button>
+			<button current id="top-tracks"><span class="material-icons">music_note</span></button>
+			<button id="top-tags"><span class="material-icons">local_offer</span></button>
+
+			
+			<button id="settings-button"><span class="material-icons">settings</span></button>
+		</div>
+
+		<!-- Main Area -->
+		<div id="main">
+			<!-- <button class="tag-button">chill</button>
+			<button class="tag-button">summer</button>
+			<button class="tag-button">fufunk</button>
+			<button class="tag-button">VGM</button>
+			<button class="tag-button">hard chip</button>
+			<button class="tag-button">y2k</button>
+			<button class="tag-button">garage</button>
+			<button class="tag-button">box</button>
+			<button class="tag-button">jazz</button>
+			<button class="tag-button">digifu</button>
+			<button class="tag-button">electronic</button>
+			<button class="tag-button">alt rock</button> -->
+		</div>
+	
+		<!-- Play Bar -->
+		<div id="play-bar">
+			<p>
+				<span id="play-bar-title"></span>
+				<br>
+				<span id="play-bar-author"></span>
+			</p>
+			
+			<button id="play-button"><span class="material-icons">play_arrow</span></button>
+		</div>
+
+		<div style="display:hidden">
+			<input id="playhead" type="range" value=0 min=0 max=100 step=0.001>
+		</div>
+
+		<!-- LIBRARIES AND SHIII -->
+		<script src="/socket.io/socket.io.js"></script>
+
+		<!-- MY SCRIPTINGS AND SHIIII -->
+		<script src="init.js"></script>	
+		<script src="omni.js"></script>
+		<script src="main.js"></script>
+		<script src="test.js"></script>
+	</body>
+</html>
