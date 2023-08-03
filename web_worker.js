@@ -1,5 +1,9 @@
 // We need to find a way to manipulate streams betterrr
-const client = require('discord-rich-presence')('1136427488495550494')
+var client
+var isLocal = (process.env["local"] != null && process.env["local"] = "true")
+if (isLocal) {
+  client = require('discord-rich-presence')('1136427488495550494')
+}
 
 const io = new Server(httpserver, {
   maxHttpBufferSize: 100e6
@@ -103,23 +107,25 @@ io.on("connection", async socket => {
 	})
 
   socket.on("nowplaying", (track, stateInfo) => {
-    const mmhmm = {
-      YOUTUBE: "Youtube",
-      SOUNDCLOUD: "Soundcloud",
-      BANDCAMP: "Bandcamp",
+    if (isLocal) {
+      const mmhmm = {
+        YOUTUBE: "Youtube",
+        SOUNDCLOUD: "Soundcloud",
+        BANDCAMP: "Bandcamp",
+      }
+      client.updatePresence({
+        details: `∞ ${track.author} - ${track.title}`,
+        state: `Playing Songs in Queue`,
+        partySize: stateInfo.queueIndex,
+        partyMax: stateInfo.queueSize,
+        startTimestamp: stateInfo.start,
+        largeImageKey: "omniiconlarge",
+        largeImageText: "Omni Music Player",
+        smallImageKey: track.type.toLowerCase(),
+        smallImageText: `Current Track from ${mmhmm[track.type]}!`,
+        instance: true,
+      })
     }
-    client.updatePresence({
-      details: `∞ ${track.author} - ${track.title}`,
-      state: `Playing Songs in Queue`,
-      partySize: stateInfo.queueIndex,
-      partyMax: stateInfo.queueSize,
-      startTimestamp: stateInfo.start,
-      largeImageKey: "omniiconlarge",
-      largeImageText: "Omni Music Player",
-      smallImageKey: track.type.toLowerCase(),
-      smallImageText: `Current Track from ${mmhmm[track.type]}!`,
-      instance: true,
-    })
   })
 })
 
