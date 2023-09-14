@@ -6,6 +6,7 @@ global.Readable = require('node:stream').Readable
 global.SoundCloud = require("scdl-core").SoundCloud
 global.ytdl = require('bluto-dl')
 global.bcfetch = require('bandcamp-fetch')
+global.bcscrape = require('bandcamp-scraper')
 global.fetch = require('node-fetch')
 global.streamToBuffer = require('fast-stream-to-buffer')
 require("./arrayLib.js")

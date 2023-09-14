@@ -1,5 +1,29 @@
 [
   {
+    "type": "BANDCAMP",
+    "title": "Vicious",
+    "author": "MEMODEMO",
+    "thumbnail": "https://f4.bcbits.com/img/a3365227704_10.jpg",
+    "url": "https://memodemo.bandcamp.com/track/vicious",
+    "streams": {
+      "start": "/mediastart?url=https%3A%2F%2Fmemodemo.bandcamp.com%2Ftrack%2Fvicious",
+      "mid": "/media?url=https%3A%2F%2Fmemodemo.bandcamp.com%2Ftrack%2Fvicious"
+    },
+    "tags": []
+  },
+  {
+    "type": "BANDCAMP",
+    "title": "Temporal Momeries",
+    "author": "idogedochiptune",
+    "thumbnail": "https://f4.bcbits.com/img/a1114375126_16.jpg",
+    "url": "https://idogedochiptune.bandcamp.com/track/temporal-memories",
+    "streams": {
+      "start": "/mediastart?url=https%3A%2F%2Fidogedochiptune.bandcamp.com%2Ftrack%2Ftemporal-memories",
+      "mid": "/media?url=https%3A%2F%2Fidogedochiptune.bandcamp.com%2Ftrack%2Ftemporal-memories"
+    },
+    "tags": []
+  },
+  {
     "type": "YOUTUBE",
     "title": "Loretta",
     "author": "Ginger Root",

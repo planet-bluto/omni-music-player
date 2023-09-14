@@ -38,10 +38,14 @@ async function getStream( thisURL, req_range ) {
   }
   if (thisURLClass.hostname.endsWith("bandcamp.com")) {
     mode = "BC"
-    var track = await bcfetch.getTrackInfo(thisURL)
-    // var response = await fetch(track.streamUrl, {method: "GET"})
-    // stream = response.body
-    stream = track.streamUrl
+    var track = await new Promise((res, rej) => {
+      bcscrape.getTrackInfo(thisURL, (err, track) => {
+        res(track)
+      })
+    })
+    var response = await fetch(track.raw.trackinfo[0].file["mp3-128"], {method: "GET"})
+    stream = response.body
+    // stream = track.streamUrl
   }
 
   return {stream: stream, mode: mode, start: start, end: end}
@@ -52,9 +56,9 @@ app.get("/mediastart", async (req, res) => {
   if (thisURL != "") {
     var {stream, mode, start, end} = await getStream(thisURL, req.headers.range)
     switch (mode) {
-      case "BC":
-        res.redirect(stream)
-      break;
+      // case "BC":
+      //   res.redirect(stream)
+      // break;
       default:
         stream.pipe(res)  
     }
@@ -75,9 +79,9 @@ app.get("/media", async (req, res) => {
       case "YT":
         stream.pipe(res)
       break;
-      case "BC":
-        res.redirect(stream)
-      break;
+      // case "BC":
+      //   res.redirect(stream)
+      // break;
       default:
         streamToBuffer(stream, (err, buf) => {
           var total = buf.length
