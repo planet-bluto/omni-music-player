@@ -50,7 +50,7 @@ OmniEvents.on("nowplaying", track => {
 	canvasSetup(track.url)
 })
 
-socket.emit("tracks")
+// socket.emit("tracks")
 socket.on("tracks", (tracks) => {
 	var main_elem = document.getElementById("main")
 	tracks.forEach(track => {
@@ -62,6 +62,9 @@ socket.on("tracks", (tracks) => {
 			elem: track_elem
 		})
 	})
+
+	print(String(TEMP_QUEUE.length))
+	main_elem.style.setProperty("--track-count", `${TEMP_QUEUE.length}`)
 })
 
 function volUpdate(telementry = false) {
@@ -215,7 +218,9 @@ function resizeCheck() {
 	play_bar_elem.style["--curr_height"] = `${playing_track_info.clientHeight+53+20}px`
 
 	var main_elem = document.getElementById("main")
-	main_elem.style = `--this_height: ${main_elem.clientHeight}px;`
+	print(`HEIGHT CHECK !!\n${main_elem.clientHeight}px;`)
+	main_elem.style.setProperty("--this_height", `${main_elem.clientHeight}px`)
+	// main_elem.style["--this_height"] = `${main_elem.clientHeight}px;`
 
 	resizePlayingTrackCont()
 }
@@ -224,7 +229,7 @@ resizeCheck()
 function showTrackPopup(track) {
 	// print("ok gimme a minute...", track)
 	document.getElementById("popout-track-play-button").onclick = e => {
-		var fut_ind = QueueIndex
+		var fut_ind = QueueIndex+1
 		insertTrackToQueue(track, QueueIndex)
 		play(track, fut_ind)
 		closePopup()
@@ -255,3 +260,35 @@ function closePopup() {
 }
 
 document.getElementById("fadeout").onclick = closePopup
+
+var pages = ["top-home", "top-playlist", "top-tracks", "top-tags"]
+
+var pending_tracks = false
+function switchPage( pageName ) {
+	pending_tracks = false
+	TEMP_QUEUE = []
+	var main_elem = document.getElementById("main")
+	var clicked_elem = document.getElementById(pageName)
+	pages.forEach(page => {
+		document.getElementById(page).removeAttribute("current")
+	})
+	clicked_elem.setAttribute("current", "")
+	main_elem.clearChildren()
+
+	// wtf do I do next??
+	switch (pageName) {
+		case 'top-home':
+		break;
+		case 'top-tracks':
+			pending_tracks = true
+			socket.emit("tracks")
+		break;
+	}
+}
+
+pages.forEach(pageName => {
+	document.getElementById(pageName).onclick = e => {
+		e.preventDefault()
+		switchPage(pageName)
+	}
+})

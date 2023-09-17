@@ -64,7 +64,7 @@ body::-webkit-scrollbar {
 	overflow-x: scroll;
 	overflow-y: clip;
 	top: calc(64px + 15px);
-	grid-template-columns: repeat(4223, var(--that_height));
+	grid-template-columns: repeat(var(--track-count), var(--that_height));
 	grid-template-rows: var(--that_height);
 	/* grid-template-rows: repeat(3, calc((var(--that_height) - 30px) / 3)); */
 	gap: 15px;

@@ -57,7 +57,7 @@ app.get("/mediastart", async (req, res) => {
     var {stream, mode, start, end} = await getStream(thisURL, req.headers.range)
     switch (mode) {
       // case "BC":
-      //   res.redirect(stream)
+      //   res.redirect(stream) 
       // break;
       default:
         stream.pipe(res)  
@@ -106,8 +106,30 @@ app.get("/", (req, res) => {
 })
 
 io.on("connection", async socket => {
-	socket.on("tracks", () => {
-		socket.emit("tracks", require("./soundcloud_likes.json").slice(0, 500))
+	socket.on("tracks", async () => {
+    var tracks = []
+    var amount = 5000
+    var client_id = `TtbhBUaHqao06g1mUwVTxbjj8TSUkiCl`
+
+    var res = await fetch(`https://api-v2.soundcloud.com/users/899535727/track_likes?limit=${amount}&client_id=${client_id}`)
+    var data = await res.json()
+    
+    data.collection.forEach(obj => {
+      var track = obj.track
+      tracks.push({
+          type: "SOUNDCLOUD",
+          title: track.title,
+          author: track.user.username,
+          thumbnail: (track.artwork_url || track.user.avatar_url).replace("-large.jpg", "-t500x500.jpg"),
+          url: track.permalink_url,
+          streams: {
+              start: `/mediastart?url=${encodeURIComponent(track.permalink_url)}`,
+              mid: `/media?url=${encodeURIComponent(track.permalink_url)}`
+          },
+          tags: []
+      })
+    })
+		socket.emit("tracks", tracks)
 	})
 
   socket.on("nowplaying", (track, stateInfo) => {
