@@ -108,10 +108,13 @@ app.get("/", (req, res) => {
 io.on("connection", async socket => {
 	socket.on("tracks", async () => {
     var tracks = []
-    var amount = 5000
+    var amount = 10
     var client_id = `TtbhBUaHqao06g1mUwVTxbjj8TSUkiCl`
+    var user_id = "200230716"
 
-    var res = await fetch(`https://api-v2.soundcloud.com/users/899535727/track_likes?limit=${amount}&client_id=${client_id}`)
+    print(`Returning ${amount} tracks...`)
+
+    var res = await fetch(`https://api-v2.soundcloud.com/users/${user_id}/track_likes?limit=${amount}&client_id=${client_id}`)
     var data = await res.json()
     
     data.collection.forEach(obj => {
@@ -133,6 +136,7 @@ io.on("connection", async socket => {
 	})
 
   socket.on("nowplaying", (track, stateInfo) => {
+    print(track, stateInfo)
     if (isLocal) {
       const mmhmm = {
         YOUTUBE: "Youtube",

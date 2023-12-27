@@ -74,7 +74,7 @@ function volUpdate(telementry = false) {
 		PlayingSong.streams.mid.volume = GLOBAL_VOLUME	
 	}
 	if (telementry) {
-		print(`Set volume to ${GLOBAL_VOLUME*100.0}%`)	
+		print(`Set volume to ${GLOBAL_VOLUME*100.0}%`)
 	}
 }
 
@@ -261,7 +261,7 @@ function closePopup() {
 
 document.getElementById("fadeout").onclick = closePopup
 
-var pages = ["top-home", "top-playlist", "top-tracks", "top-tags"]
+var pages = ["top-home", "top-playlist", "top-tracks", "top-tags", "settings-button"]
 
 var pending_tracks = false
 function switchPage( pageName ) {
@@ -273,6 +273,7 @@ function switchPage( pageName ) {
 		document.getElementById(page).removeAttribute("current")
 	})
 	clicked_elem.setAttribute("current", "")
+	main_elem.setAttribute("page", pageName)
 	main_elem.clearChildren()
 
 	// wtf do I do next??
@@ -283,6 +284,60 @@ function switchPage( pageName ) {
 			pending_tracks = true
 			socket.emit("tracks")
 		break;
+		case 'settings-button':
+			function makeElement(schema, this_key, this_value) {
+				print("Hi schema!", schema)
+				var paraElem = document.createElement('p')
+				paraElem.textContent = this_key + ": "
+
+				switch (schema.type) {
+					case "string":
+						var elem = document.createElement("input")
+						elem.setAttribute("type", "text")
+						if (schema.placeholder != null) { elem.setAttribute("placeholder", schema.placeholder) }
+						elem.value = this_value
+						paraElem.appendChild(elem)
+						return paraElem
+					break;
+					case "drop-down":
+						var elem = document.createElement("input")
+						elem.setAttribute("type", "text")
+						elem.value = this_value
+						paraElem.appendChild(elem)
+						return paraElem
+					break;
+					case "checkbox":
+						var elem = document.createElement("input")
+						elem.setAttribute("type", "checkbox")
+						elem.checked = this_value
+						paraElem.appendChild(elem)
+						return paraElem
+					break;
+					case "slider":
+						var elem = document.createElement("input")
+						elem.setAttribute("type", "range")
+						elem.value = this_value
+						paraElem.appendChild(elem)
+						return paraElem
+					break;
+				}
+			}
+
+			Object.keys(_settings_schema).forEach(key => {
+				var res = _settings_schema[key]
+
+				if (res.header == true) {
+					Object.keys(res).forEach(sub_key => {
+						if (sub_key == "header"){ return }
+						var elem = makeElement(_settings_schema[key][sub_key], sub_key, settings[key][sub_key])
+						main_elem.appendChild(elem)
+					})
+				} else {
+					var elem = makeElement(_settings_schema[key], key, settings[key])
+					main_elem.appendChild(elem)
+				}
+			})
+		break;
 	}
 }
 
@@ -292,3 +347,9 @@ pages.forEach(pageName => {
 		switchPage(pageName)
 	}
 })
+
+// document.getElementById("settings-button").onclick = e => {
+// 	e.preventDefault()
+// 	print("settings yo")
+// 	switchPage("settings-button")
+// }
