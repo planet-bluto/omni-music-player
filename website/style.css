@@ -54,6 +54,32 @@ body::-webkit-scrollbar {
   display: none;
 }
 
+#loading-symbol {
+	position: absolute;
+	z-index: 2001;
+	animation-name: spin;
+	animation-duration: 500ms;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+	font-size: 128px;
+}
+
+@keyframes spin {
+		from {
+				transform:rotate(0deg);
+		}
+		to {
+				transform:rotate(360deg);
+		}
+}
+
+#loading {
+	z-index: 2000;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 #main {
 	width: 100%;
 	--this_height: 392.833px;
@@ -284,8 +310,7 @@ body::-webkit-scrollbar {
     left: calc(50% - 30px - 32px);
 }
 
-#fadeout {
-	z-index: 1000;
+.fadeout-common {
 	position: absolute;
 	top: 0px;
 	left: 0px;
@@ -294,6 +319,8 @@ body::-webkit-scrollbar {
 	background: #000;
 	opacity: 0.75;
 }
+
+#fadeout { z-index: 1000 }
 
 .popup {
 	z-index: 1001;

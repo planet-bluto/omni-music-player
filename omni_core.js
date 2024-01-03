@@ -10,6 +10,7 @@ var path = require('path')
 var Readable = require('node:stream').Readable
 var fetch = require('node-fetch')
 var express = require('express')
+var jwt = require('jsonwebtoken')
 
 require("./arrayLib.js")
 
@@ -21,7 +22,8 @@ if (isLocal) {
 
 class OmniCoreClass {
 	constructor() {
-	    this.app = express()
+			this.express = express
+	    this.app = this.express()
 	    this.httpserver = require('http').createServer(this.app);
 	    this.Server = require('socket.io').Server
 
@@ -35,9 +37,11 @@ class OmniCoreClass {
 	    //// Express ////
 	    this.app.use('/', express.static(path.join(__dirname, 'website')))
 
-		this.app.get("/", (req, res) => {
-			res.sendFile('/index.html', {root: path.resolve(__dirname, "website")})
-		})
+			this.app.get("/", (req, res) => {
+				res.sendFile('/index.html', {root: path.resolve(__dirname, "website")})
+			})
+
+			require("./omni_core_api.js")(this)
 	}
 
 	async start() {
@@ -88,31 +92,39 @@ class OmniCoreClass {
 }
 
 function SocketHandler(socket) {
-	socket.on("tracks", async () => {
-    var tracks = []
-    var amount = 5000
-    var client_id = SoundCloud.clientId
-    var user_id = "200230716"
+	socket.on("tracks", async (callback) => {
+		if (false) {
+			var tracks = []
+			var amount = 5000
+			var client_id = SoundCloud.clientId
+			var user_id = "200230716"
 
-    var res = await fetch(`https://api-v2.soundcloud.com/users/${user_id}/track_likes?limit=${amount}&client_id=${client_id}`)
-    var data = await res.json()
-    
-    data.collection.forEach(obj => {
-		var track = obj.track
-		tracks.push({
-			type: "SOUNDCLOUD",
-			title: track.title,
-          	author: track.user.username,
-          	thumbnail: (track.artwork_url || track.user.avatar_url).replace("-large.jpg", "-t500x500.jpg"),
-          	url: track.permalink_url,
-          	streams: {
-            	start: `/mediastart?url=${encodeURIComponent(track.permalink_url)}`,
-            	mid: `/media?url=${encodeURIComponent(track.permalink_url)}`
-          	},
-          	tags: []
-    	})
-    })
-		socket.emit("tracks", tracks)
+			var res = await fetch(`https://api-v2.soundcloud.com/users/${user_id}/track_likes?limit=${amount}&client_id=${client_id}`)
+			var data = await res.json()
+
+			data.collection.forEach(obj => {
+			var track = obj.track
+			tracks.push({
+				type: "SOUNDCLOUD",
+				title: track.title,
+							author: track.user.username,
+							thumbnail: (track.artwork_url || track.user.avatar_url).replace("-large.jpg", "-t500x500.jpg"),
+							url: track.permalink_url,
+							streams: {
+								start: `/mediastart?url=${encodeURIComponent(track.permalink_url)}`,
+								mid: `/media?url=${encodeURIComponent(track.permalink_url)}`
+							},
+							tags: []
+				})
+			})
+				callback(tracks)
+		} else {
+			var test_tracks = require("./soundcloud_likes.json")
+			// test_tracks.shuffle()
+			// test_tracks = test_tracks.slice(0, 50)
+			
+			callback(test_tracks)
+		}
 	})
 
   socket.on("nowplaying", (track, stateInfo) => {

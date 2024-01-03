@@ -1,6 +1,8 @@
 const print = console.log
 var socket = io()
 
+var localStorage = window.localStorage
+
 function clamp(val, min, max) {
 	if (val < min) { val = min }
 	if (val > max) { val = max }
@@ -25,6 +27,14 @@ function tween_volume(start, end, rounds, time) {
 			}
 		}
 		setTimeout(loop, timeout_time)
+	})
+}
+
+const wait = (ms) => {
+	return new Promise((res, rej) => {
+		setTimeout(() => {
+			res()
+		}, ms)
 	})
 }
 
@@ -78,3 +88,18 @@ if( typeof Element.prototype.clearChildren === 'undefined' ) {
       }
     });
 }
+
+var loading_processes = {}
+function startLoading(key) {
+	loading_processes[key] = false
+	document.getElementById("loading").style.setProperty("display", "")
+}
+
+function stopLoading(key) {
+	loading_processes[key] = true
+	if (Object.values(loading_processes).every(bool => bool)) {
+		document.getElementById("loading").style.setProperty("display", "none")
+	}
+}
+
+startLoading("auth")

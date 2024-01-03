@@ -21,6 +21,21 @@
 </head>
 
 <body>
+	<div style="display: none;" class="fadeout-common" id="loading">
+		<span id="loading-symbol" class="material-icons">hourglass_full</span>
+	</div>
+	
+		<div style="display: none;" id="popup-auth" class="popup">
+			<p>Username:</p>
+			<input id="popup-auth-username">
+			<p>Password:</p>
+			<input id="popup-auth-password">
+			<div id="popup-auth-button-cont">
+				<button id="popup-auth-login">LOGIN</button>
+				<button id="popup-auth-signup">SIGNUP</button>
+			</div>
+		</div>
+		
 		<div style="display: none;" id="popup-track" class="popup">
 			<img src="">
 			<button class="popout-track-button" id="popout-track-play-button">Play Song</button>
@@ -28,7 +43,7 @@
 			<button class="popout-track-button" id="popout-track-queue-button">Add to Queue</button>
 		</div>
 
-		<div style="display: none;" id="fadeout"></div>
+		<div style="display: none;" class="fadeout-common" id="fadeout"></div>
 
 		<!-- Top Bar -->
 		<div id="top-bar">

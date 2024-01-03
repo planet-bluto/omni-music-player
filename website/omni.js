@@ -24,6 +24,7 @@ var OmniEvents = {
 
 var playhead = document.getElementById('playhead')
 var playhead_down = false
+var endBuffering = false
 var GLOBAL_VOLUME = 0.5
 var QueueIndex = -1
 var Queue = []
@@ -81,30 +82,52 @@ function canvasSetup(url) {
 	  requestAnimationFrame(renderFrame);
 
 	  if (PlayingSong.currentStream.getAttribute("type") == "mid") {
-	  	// print("FUUUUCK")
-		x = 0
-
-		analyser.getByteFrequencyData(dataArray)
-
-		// ctx.fillStyle = "#000";
-		ctx.clearRect(0, 0, WIDTH, HEIGHT)
-
-		var barWidth = (WIDTH / bufferLength) * (2.56*5)
-
-		for (var i = 0; i < bufferLength; i++) {
-			// print(currents[1])
-			barHeight = dataArray[i]
-
-			ctx.fillStyle = document.styleSheets[0].cssRules[0].style.getPropertyValue("--theme-accent2-pos")
-			ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight)
-
-			x += barWidth + 1
-		}
+		  	// print("FUUUUCK")
+			x = 0
+	
+			analyser.getByteFrequencyData(dataArray)
+	
+			// ctx.fillStyle = "#000";
+			ctx.clearRect(0, 0, WIDTH, HEIGHT)
+	
+			var barWidth = (WIDTH / bufferLength) * (2.56*5)
+	
+			for (var i = 0; i < bufferLength; i++) {
+				// print(currents[1])
+				barHeight = dataArray[i]
+	
+				ctx.fillStyle = document.styleSheets[0].cssRules[0].style.getPropertyValue("--theme-accent2-pos")
+				ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight)
+	
+				x += barWidth + 1
+			}
 	  }
 	}
 
 	if (!query_params.includes("mobile")) { renderFrame() }
 }
+
+function playheadRender() {
+	requestAnimationFrame(playheadRender)
+
+	if (PlayingSong != null) {
+		var new_val = (PlayingSong.currentStream.currentTime / PlayingSong.streams.mid.duration) * 100
+		// print(new_val)
+		if (!playhead_down) {
+			playhead.value = new_val
+	
+			// print(new_val)
+			if (!endBuffering) {
+				if (PlayingSong.currentStream.ended || (new_val > 99.8) || (PlayingSong.currentStream.readyState == 2)) {
+					endBuffering = true
+					wait(2000).then(next)
+					// random_song()
+				}
+			}
+		}
+	}
+}
+playheadRender()
 
 function focusNowPlaying() {
 	var id = encodeURIComponent(PlayingSong.track.url)
@@ -158,7 +181,7 @@ function buildQueueItem(track) {
 
 function insertTracksToQueue(tracks, ind, playing = (Queue.length == 0)) {
 	print(tracks, ind, playing)
-	ind += 1
+	// ind += 1 // <- Why do this ??
 
 	var queue_cont = document.getElementById("queue")
 	var main_elem
@@ -228,19 +251,7 @@ async function play(omni_track, q_ind = -1, focus = false) {
 	}
 
 	var playhead_int = setInterval(() => {
-		if (PlayingSong != null) {
-			var new_val = (PlayingSong.currentStream.currentTime / PlayingSong.streams.mid.duration) * 100
-			// print(new_val)
-			if (!playhead_down) {
-				playhead.value = new_val
 
-				// print(new_val)
-				if (PlayingSong.currentStream.ended || (new_val > 99.8) || (PlayingSong.currentStream.readyState == 2)) {
-					next()
-					// random_song()
-				}
-			}
-		}
 	}, 100)
 
 	PlayingSong = {
@@ -278,6 +289,7 @@ async function play(omni_track, q_ind = -1, focus = false) {
 	// })
 	function final_bit(this_track) {
 		if (PlayingSong.track == this_track) {
+			endBuffering = false
 			PlayingSong.streams.start.volume = GLOBAL_VOLUME
 			PlayingSong.streams.mid.volume = GLOBAL_VOLUME
 			play_button.innerHTML = `<span class="material-icons">pause</span>`

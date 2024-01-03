@@ -30,7 +30,7 @@ function trackElem(track, bottom = false) {
 	
 	if (!bottom) {
 		track_elem.onclick = e => {
-			// insertTrackToQueue(track, QueueIndex, true)
+			// insertTrackToQueue(track, QufeueIndex, true)
 			showTrackPopup(track)
 		}
 	}
@@ -51,21 +51,9 @@ OmniEvents.on("nowplaying", track => {
 })
 
 // socket.emit("tracks")
-socket.on("tracks", (tracks) => {
-	var main_elem = document.getElementById("main")
-	tracks.forEach(track => {
-		var track_elem = trackElem(track)
-		main_elem.appendChild(track_elem)
+// socket.on("tracks", (tracks) => {
 
-		TEMP_QUEUE.push({
-			track: track,
-			elem: track_elem
-		})
-	})
-
-	print(String(TEMP_QUEUE.length))
-	main_elem.style.setProperty("--track-count", `${TEMP_QUEUE.length}`)
-})
+// })
 
 function volUpdate(telementry = false) {
 	GLOBAL_VOLUME = clamp(GLOBAL_VOLUME, 0, 1)
@@ -226,11 +214,80 @@ function resizeCheck() {
 }
 resizeCheck()
 
+function showAuthPopup() {
+	stopLoading("auth")
+	var getInputs = () => {
+		return {username: document.getElementById("popup-auth-username").value, password: document.getElementById("popup-auth-password").value}
+	}
+
+	async function auth(type) {
+		var {username, password} = getInputs()
+
+		var res = await fetch(`/api/${type}`, {
+			method: "POST",
+			body: JSON.stringify({username, password}),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+
+		if (res.ok) {
+			var resJSON = await res.json()
+			localStorage.setItem("token", resJSON.token)
+			closePopup()
+			// print(resJSON)
+		} else {
+			var resText = await res.text()
+			// print(resText)
+		}
+	}
+	
+	var login_button = document.getElementById("popup-auth-login")
+	login_button.onclick = async e => {
+		auth("login")
+	}
+	
+	var signup_button = document.getElementById("popup-auth-signup")
+	signup_button.onclick = async e => {
+		auth("signup")
+	}
+	
+	document.getElementById("popup-auth").style["display"] = ""
+	document.getElementById("fadeout").style["display"] = ""
+}
+
+// Checking authenticationings
+async function authCheck() {
+	var token = localStorage.getItem("token")
+	if (token) {
+		var res = await fetch(`/api/me`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Authorization": `Bearer ${token}`,
+			},
+		})
+
+		if (res.ok) {
+			var resJSON = await res.json()
+			stopLoading("auth")
+		} else {
+			var resText = await res.text()
+			showAuthPopup()
+		}
+	} else {
+		showAuthPopup()
+	}
+}
+
+authCheck()
+
 function showTrackPopup(track) {
+	closePopup()
 	// print("ok gimme a minute...", track)
 	document.getElementById("popout-track-play-button").onclick = e => {
 		var fut_ind = QueueIndex+1
-		insertTrackToQueue(track, QueueIndex)
+		insertTrackToQueue(track, fut_ind)
 		play(track, fut_ind)
 		closePopup()
 	}
@@ -282,7 +339,21 @@ function switchPage( pageName ) {
 		break;
 		case 'top-tracks':
 			pending_tracks = true
-			socket.emit("tracks")
+			socket.emitWithAck("tracks").then(tracks => {
+				var main_elem = document.getElementById("main")
+				tracks.forEach(track => {
+					var track_elem = trackElem(track)
+					main_elem.appendChild(track_elem)
+	
+					TEMP_QUEUE.push({
+						track: track,
+						elem: track_elem
+					})
+				})
+	
+				print(String(TEMP_QUEUE.length))
+				main_elem.style.setProperty("--track-count", `${TEMP_QUEUE.length}`)
+			})
 		break;
 		case 'settings-button':
 			function makeElement(schema, this_key, this_value) {
