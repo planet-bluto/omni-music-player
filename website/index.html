@@ -1,9 +1,28 @@
-<html>
+<html id="top">
 <head>
+
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width">
-	<link href="icon.png" rel="icon" type="image/png" sizes="32x32" />
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+	<meta name="application-name" content="Omni" />
+    <meta name="apple-mobile-web-app-title" content="Omni">
+	<meta name="description" content="A feature rich; multi-service music listening client!" />
+    <meta name="keywords" content="YouTube, SoundcCloud, Bandcamp, music, client, web app" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#024aca" />
+    <meta name="msapplication-TileColor" content="#024aca" />
+	<link rel="icon" type="image/png" sizes="32x32" href="./icon.png" />
 	<title>Omni</title>
+	
+	<!-- <meta name="twitter:card" content="summary_large_image" /> -->
+	<!-- <meta property="og:image" content="https://i.imgur.com/uQf9p20.png" /> -->
+	<!-- <meta property="og:image:type" content="image/png" /> -->
+
+	<!-- <meta charset="utf-8"> -->
+	<!-- <meta name="viewport" content="width=device-width"> -->
+	<!-- <link href="icon.png" rel="icon" type="image/png" sizes="32x32" /> -->
+	<!-- <title>Omni</title> -->
 	<style id="theme">
 		:root {
 			--theme-back: #151515;
@@ -21,185 +40,196 @@
 </head>
 
 <body>
-	<div style="display: none;" class="fadeout-common" id="loading">
-		<span id="loading-symbol" class="material-icons">hourglass_full</span>
-	</div>
-	
-		<div style="display: none;" id="popup-auth" class="popup">
-			<p>Username:</p>
-			<input id="popup-auth-username">
-			<p>Password:</p>
-			<input id="popup-auth-password">
-			<div id="popup-auth-button-cont">
-				<button id="popup-auth-login">LOGIN</button>
-				<button id="popup-auth-signup">SIGNUP</button>
-			</div>
+	<div id="fullscreen-cont">
+		<div id="toast-cont"></div>
+
+		<button id="fullscreen-button" onclick="fullscreenPage()">
+			Fullscreen Pls
+		</button>
+
+		<div style="display: none;" class="fadeout-common" id="loading">
+			<span id="loading-symbol" class="material-icons">hourglass_full</span>
 		</div>
 		
-		<div style="display: none;" id="popup-track" class="popup">
-			<img src="">
-			<button class="popout-track-button" id="popout-track-play-button">Play Song</button>
-			<button class="popout-track-button" id="popout-track-playnext-button">Play Next</button>
-			<button class="popout-track-button" id="popout-track-queue-button">Add to Queue</button>
-		</div>
-
-		<div style="display: none;" class="fadeout-common" id="fadeout"></div>
-
-		<!-- Top Bar -->
-		<div id="top-bar">
-			<button id="top-home"><span class="material-icons">home</span></button>
-			<button id="top-playlist"><span class="material-icons">video_library</span></button>
-			<button current id="top-tracks"><span class="material-icons">music_note</span></button>
-			<button id="top-tags"><span class="material-icons">local_offer</span></button>
-
+			<div style="display: none;" id="popup-auth" class="popup">
+				<p>Username</p>
+				<input id="popup-auth-username">
+				<p>Password:</p>
+				<input id="popup-auth-password">
+				<div id="popup-auth-button-cont">
+					<button id="popup-auth-login">LOGIN</button>
+					<button id="popup-auth-signup">SIGNUP</button>
+				</div>
+			</div>
 			
-			<button id="settings-button"><span class="material-icons">settings</span></button>
-		</div>
+			<div style="display: none;" id="popup-form-cont" class="popup"></div>
+			<div style="display: none;" id="popup-cont" class="popup"></div>
 
-		<!-- Main Area -->
-		<div id="main">
-			<!-- <button class="tag-button">chill</button>
-			<button class="tag-button">summer</button>
-			<button class="tag-button">fufunk</button>
-			<button class="tag-button">VGM</button>
-			<button class="tag-button">hard chip</button>
-			<button class="tag-button">y2k</button>
-			<button class="tag-button">garage</button>
-			<button class="tag-button">box</button>
-			<button class="tag-button">jazz</button>
-			<button class="tag-button">digifu</button>
-			<button class="tag-button">electronic</button>
-			<button class="tag-button">alt rock</button> -->
-		</div>
-	
-		<!-- Play Bar -->
-		<div id="play-bar" style="--pos: 0px">
-			<div style="display: none" id="playing-track-cont"></div>
-			<p id="playing-track-info">
-				<span id="play-bar-title">Nothing Playing...</span>
-				<br>
-				<span id="play-bar-author">Welcome to Omni :)</span>
-			</p>
-			
-			<div id="controls">
-				<button style="display: none" id="loop-button"><span class="material-icons">loop</span></button>
-				<button id="prev-button"><span class="material-icons">skip_previous</span></button>
-				<button id="play-button"><span class="material-icons">play_arrow</span></button>
-				<button id="next-button"><span class="material-icons">skip_next</span></button>
-				<button style="display: none" id="shuffle-button"><span class="material-icons">shuffle</span></button>
+			<div style="display: none;" class="fadeout-common" id="fadeout"></div>
+
+			<!-- Top Bar -->
+			<div id="top-bar">
+				<button id="back-button" onclick="restorePage()"><span class="material-icons">arrow_back</span></button>
+				<button id="lookup-button" onclick="lookupTracks()"><span class="material-icons">search</span></button>
+
+				<button id="top-home"><span class="material-icons">home</span></button>
+				<button id="top-playlist"><span class="material-icons">video_library</span></button>
+				<button current id="top-tracks"><span class="material-icons">music_note</span></button>
+				<button id="top-tags"><span class="material-icons">local_offer</span></button>
+				
+				<button id="settings-button"><span class="material-icons">settings</span></button>
 			</div>
 
-			<input style="display: none" id="playhead" type="range" value=0 min=0 max=100 step=0.001>
-
-			<button id="close-menu-button" style="display: none"><span class="material-icons">expand_more</span></button>
-
-			<div style="display: none" class="queue-like" id="queue-fade"></div>
-			<div style="display: none" class="queue-like" id="queue">
-
-
-
-<!-- 				<div class="queue-item">
-					<p>
-						<span class="queue-item-title">EMBRYOGLYPH</span>
-						<br>
-						<span class="queue-item-author">METAROOM</span>
-					</p>
-				</div>
-				<div class="queue-item">
-					<p>
-						<span class="queue-item-title">EMBRYOGLYPH</span>
-						<br>
-						<span class="queue-item-author">METAROOM</span>
-					</p>
-				</div>
-				<div class="queue-item">
-					<p>
-						<span class="queue-item-title">EMBRYOGLYPH</span>
-						<br>
-						<span class="queue-item-author">METAROOM</span>
-					</p>
-				</div>
-				<div class="queue-item">
-					<p>
-						<span class="queue-item-title">EMBRYOGLYPH</span>
-						<br>
-						<span class="queue-item-author">METAROOM</span>
-					</p>
-				</div>
-				<div class="queue-item">
-					<p>
-						<span class="queue-item-title">EMBRYOGLYPH</span>
-						<br>
-						<span class="queue-item-author">METAROOM</span>
-					</p>
-				</div>
-				<div class="queue-item">
-					<p>
-						<span class="queue-item-title">EMBRYOGLYPH</span>
-						<br>
-						<span class="queue-item-author">METAROOM</span>
-					</p>
-				</div>
-				<div class="queue-item">
-					<p>
-						<span class="queue-item-title">EMBRYOGLYPH</span>
-						<br>
-						<span class="queue-item-author">METAROOM</span>
-					</p>
-				</div>
-				<div class="queue-item">
-					<p>
-						<span class="queue-item-title">EMBRYOGLYPH</span>
-						<br>
-						<span class="queue-item-author">METAROOM</span>
-					</p>
-				</div>
-				<div class="queue-item">
-					<p>
-						<span class="queue-item-title">EMBRYOGLYPH</span>
-						<br>
-						<span class="queue-item-author">METAROOM</span>
-					</p>
-				</div>
-				<div class="queue-item">
-					<p>
-						<span class="queue-item-title">EMBRYOGLYPH</span>
-						<br>
-						<span class="queue-item-author">METAROOM</span>
-					</p>
-				</div>
-				<div class="queue-item">
-					<p>
-						<span class="queue-item-title">EMBRYOGLYPH</span>
-						<br>
-						<span class="queue-item-author">METAROOM</span>
-					</p>
-				</div>
-				<div class="queue-item">
-					<p>
-						<span class="queue-item-title">EMBRYOGLYPH</span>
-						<br>
-						<span class="queue-item-author">METAROOM</span>
-					</p>
-				</div>
-				<div class="queue-item">
-					<p>
-						<span class="queue-item-title">EMBRYOGLYPH</span>
-						<br>
-						<span class="queue-item-author">METAROOM</span>
-					</p>
-				</div> -->
-
-
-
+			<!-- Main Area -->
+			<div id="main">
+				<!-- <button class="tag-button">chill</button>
+				<button class="tag-button">summer</button>
+				<button class="tag-button">fufunk</button>
+				<button class="tag-button">VGM</button>
+				<button class="tag-button">hard chip</button>
+				<button class="tag-button">y2k</button>
+				<button class="tag-button">garage</button>
+				<button class="tag-button">box</button>
+				<button class="tag-button">jazz</button>
+				<button class="tag-button">digifu</button>
+				<button class="tag-button">electronic</button>
+				<button class="tag-button">alt rock</button> -->
 			</div>
-		</div>
+		
+			<!-- Play Bar -->
+			<div id="play-bar" style="--pos: 0px">
+				<div style="display: none" id="playing-track-cont"></div>
+				<p id="playing-track-info">
+					<span id="play-bar-title">Nothing Playing...</span>
+					<br>
+					<span id="play-bar-author">Welcome to Omni :)</span>
+				</p>
+				
+				<div id="controls">
+					<button style="display: none" id="loop-button"><span class="material-icons">loop</span></button>
+					<button id="prev-button"><span class="material-icons">skip_previous</span></button>
+					<button id="play-button" tabindex="-1"><span class="material-icons">play_arrow</span></button>
+					<button id="next-button"><span class="material-icons">skip_next</span></button>
+					<button style="display: none" id="shuffle-button"><span class="material-icons">shuffle</span></button>
+				</div>
+
+				<input style="display: none" id="playhead" type="range" value=0 min=0 max=100 step=0.001>
+
+				<button id="close-menu-button" style="display: none"><span class="material-icons">expand_more</span></button>
+
+				<div style="display: none" class="queue-like" id="queue-fade"></div>
+				<div style="display: none" class="queue-like" id="queue">
+
+
+
+	<!-- 				<div class="queue-item">
+						<p>
+							<span class="queue-item-title">EMBRYOGLYPH</span>
+							<br>
+							<span class="queue-item-author">METAROOM</span>
+						</p>
+					</div>
+					<div class="queue-item">
+						<p>
+							<span class="queue-item-title">EMBRYOGLYPH</span>
+							<br>
+							<span class="queue-item-author">METAROOM</span>
+						</p>
+					</div>
+					<div class="queue-item">
+						<p>
+							<span class="queue-item-title">EMBRYOGLYPH</span>
+							<br>
+							<span class="queue-item-author">METAROOM</span>
+						</p>
+					</div>
+					<div class="queue-item">
+						<p>
+							<span class="queue-item-title">EMBRYOGLYPH</span>
+							<br>
+							<span class="queue-item-author">METAROOM</span>
+						</p>
+					</div>
+					<div class="queue-item">
+						<p>
+							<span class="queue-item-title">EMBRYOGLYPH</span>
+							<br>
+							<span class="queue-item-author">METAROOM</span>
+						</p>
+					</div>
+					<div class="queue-item">
+						<p>
+							<span class="queue-item-title">EMBRYOGLYPH</span>
+							<br>
+							<span class="queue-item-author">METAROOM</span>
+						</p>
+					</div>
+					<div class="queue-item">
+						<p>
+							<span class="queue-item-title">EMBRYOGLYPH</span>
+							<br>
+							<span class="queue-item-author">METAROOM</span>
+						</p>
+					</div>
+					<div class="queue-item">
+						<p>
+							<span class="queue-item-title">EMBRYOGLYPH</span>
+							<br>
+							<span class="queue-item-author">METAROOM</span>
+						</p>
+					</div>
+					<div class="queue-item">
+						<p>
+							<span class="queue-item-title">EMBRYOGLYPH</span>
+							<br>
+							<span class="queue-item-author">METAROOM</span>
+						</p>
+					</div>
+					<div class="queue-item">
+						<p>
+							<span class="queue-item-title">EMBRYOGLYPH</span>
+							<br>
+							<span class="queue-item-author">METAROOM</span>
+						</p>
+					</div>
+					<div class="queue-item">
+						<p>
+							<span class="queue-item-title">EMBRYOGLYPH</span>
+							<br>
+							<span class="queue-item-author">METAROOM</span>
+						</p>
+					</div>
+					<div class="queue-item">
+						<p>
+							<span class="queue-item-title">EMBRYOGLYPH</span>
+							<br>
+							<span class="queue-item-author">METAROOM</span>
+						</p>
+					</div>
+					<div class="queue-item">
+						<p>
+							<span class="queue-item-title">EMBRYOGLYPH</span>
+							<br>
+							<span class="queue-item-author">METAROOM</span>
+						</p>
+					</div> -->
+
+
+
+				</div>
+			</div>
+	</div>
 
 		<!-- LIBRARIES AND SHIII -->
 		<script src="/socket.io/socket.io.js"></script>
+		<script src="/lib/moment.js"></script>
+		<script src="blulib.js"></script>
 
 		<!-- MY SCRIPTINGS AND SHIIII -->
+		<script src="form.js"></script>
 		<script src="init.js"></script>	
+		<script src="toasts.js"></script>	
+		<script src="omni_api.js"></script>
 		<script src="settings.js"></script>
 		<script src="omni.js"></script>
 		<script src="main.js"></script>

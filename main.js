@@ -1,5 +1,4 @@
 global.print = console.log
-global.REPL = Boolean(process.env['REPL'])
 
 require('dotenv').config()
 var OmniCore = require("./omni_core.js")
@@ -14,6 +13,9 @@ OmniCore.app.get("/mediastart", async (req, res) => {
   if (thisURL != "") {
     var {stream, mode, start, end} = await getStream(thisURL, req.headers.range)
     switch (mode) {
+      // case "REMOTE":
+      //   res.redirect(thisURL)
+      // break;
       // case "BC":
       //   res.redirect(stream)
       // break;
@@ -33,77 +35,60 @@ OmniCore.app.get("/media", async (req, res) => {
     // res.writeHead(200, { 'Content-Length': song_length, 'Content-Type': 'audio/mpeg' })  
     // stream.pipe(res)
 
+    print(start, end)
+
+    end = parseInt(end, 10)
+    var chunksize = (end-start)+1
+    var total = chunksize
+
+	res.set('Content-Range', 'bytes ' + start + '-' + end + '/' + total)
+	res.set('Accept-Ranges', 'bytes')
+	res.set('Content-Length', chunksize)
+	res.set('Content-Type', 'audio/mpeg')
+
     switch (mode) {
-      case "YT":
-        stream.pipe(res)
-      break;
+      // case "YT":
+      //   stream.pipe(res)
+      // break;
+      // case "REMOTE":
+      //   res.redirect(thisURL)
+      // break;
       // case "BC":
       //   res.redirect(stream)
       // break;
       default:
         streamToBuffer(stream, (err, buf) => {
-          var total = buf.length
+        	total = buf.length
+        	end = end ? parseInt(end, 10) : total
+        	chunksize = (end-start)+1
 
-          end = end ? parseInt(end, 10) : total-1
-          var chunksize = (end-start)+1
-          // var readStream = fs.createReadStream(buf, {start: start, end: end})
-          var readStream = Readable.from(buf.subarray(start, end))
-          res.writeHead(206, {
-              'Content-Range': 'bytes ' + start + '-' + end + '/' + total,
-              'Accept-Ranges': 'bytes', 'Content-Length': chunksize,
-              'Content-Type': 'audio/mpeg'
-          });
-          readStream.pipe(res)
+			// res.set('Content-Range', 'bytes ' + start + '-' + end + '/' + total)
+			// res.set('Accept-Ranges', 'bytes')
+			// res.set('Content-Length', chunksize)
+			// res.set('Content-Type', 'audio/mpeg')
+
+        	// res.send(buf.subarray(start, end))
+        	res.send(buf)
         })
     }
   }
 })
 
 //// Start HTTP Server ////
-import("lowdb").then(async (module) => {
-	global.Low = module.Low
-	global.JSONFile = module.JSONFile
-
-	global.initDB = async (DBpath) => {
-		if (REPL) {
-			const Database = require("@replit/database")
-			var db = new Database()
-			
-			var dbValue = await db.get(DBpath)
-			if (dbValue == null) {
-				await db.set(DBpath, {})
-			}
-			
-			var ReplDBAdapter = require("./repldbadapter.js")
-			adapter = new ReplDBAdapter(DBpath)
-		} else {
-			adapter = new JSONFile(path.join(__dirname, `/db/${DBpath}.json`), {})
-		}
-		
-		db = new Low(adapter)
-		await db.read()
-		return db
-	}
-	global.GLOBAL_DB = await initDB("GLOBAL")
-	if (!Array.isArray(GLOBAL_DB.data.users)) {
-		GLOBAL_DB.data.users = []
-		await GLOBAL_DB.write()
-	}
-
-	global.createDB = async (DBpath, data = {}) => {
-		if (REPL) {
-			var thisDB = await initDB(DBpath)
-			thisDB.data = data
-			await thisDB.write()
-			return thisDB
-		} else {
-			await fs.writeFile(path.join(__dirname, `/db/${DBpath}.json`), JSON.stringify(data))
-			return initDB(DBpath)
-		}
-	}
-		
-	OmniCore.start()
+const {BluDB, REPLBuilder, JSONBuilder} = require("bludb")
+const DB = new BluDB(
+	JSONBuilder(),
+	// REPLBuilder(process.env["REPLIT_DB_URL"]),
+)
+DB.default({users: []}, "GLOBAL")
+DB.fetch("GLOBAL").then(GlobalDB => {
+	print("- Global init'd")
 })
+
+global.DB = DB
+// DB.default({id: "", username: ""}, (db_key) => db_key.startsWith("users/"))
+
+OmniCore.start()
 
 //////////////////////////////
 // Console Commands
@@ -148,47 +133,3 @@ command("help", [], ["<?command>"], "A list of commands OR get help on a specifi
 		print(`\nCommand Help:\n${cmd} ${info.args.join(" ")}\n\nDescription:\n${info.desc}\n\nAliases:\n${info.aliases}`)
 	}
 })
-
-if (REPL) {
-	command("clear_db", [], [], "Clears database", () => {
-		prompt.get(["Are you sure you want to clear the database? (y/n)"], async (err, res) => {
-			var answer = Object.values(res)[0]
-
-			if (answer.toLowerCase() == "y") {
-				const Database = require("@replit/database")
-				var db = new Database()
-
-				var keys = await db.list()
-
-				await keys.awaitForEach(async (key) => {
-					await db.delete(key)
-				})
-
-				print("Database cleared.")
-			} else {
-				print("Aborted.")
-			}
-		})
-	})
-
-	command("list_db", [], [], "List REPL database keys and values", async (key = null) => {
-		const Database = require("@replit/database")
-		var db = new Database()
-
-		if (key) {
-			var value = await db.get(key)
-			print(value)
-		} else {
-			var keys = await db.list()
-			print(keys)
-		}
-	})
-
-	command("delete_db", [], [], "Deletes REPL database entry", async (key) => {
-		const Database = require("@replit/database")
-		var db = new Database()
-
-		await db.delete(key)
-		print("Database entry deleted.")
-	})
-}

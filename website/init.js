@@ -1,7 +1,7 @@
-const print = console.log
 var socket = io()
 
 var localStorage = window.localStorage
+var query_params = Array.from(new URLSearchParams(window.location.search).keys())
 
 function clamp(val, min, max) {
 	if (val < min) { val = min }
@@ -9,74 +9,42 @@ function clamp(val, min, max) {
 	return val
 }
 
-function tween_volume(start, end, rounds, time) {
-	let incr = (end - start)/rounds
-	// let pol = Math.sign(start - end)
-	let timeout_time = (time*1000)/rounds
-	let i = 0
-	return new Promise((res, rej) => {
-		function loop() {
-			GLOBAL_VOLUME = start+(incr*i)
-			volUpdate()
-			i += 1
-			if (i < rounds) {
-				setTimeout(loop, timeout_time)
-			} else {
-				GLOBAL_VOLUME = end
-				res("done")
-			}
-		}
-		setTimeout(loop, timeout_time)
-	})
-}
+var vol_tweens = []
+function tween_volume(start, end, time) {
+	vol_tweens.forEach(cancelTween)
 
-const wait = (ms) => {
-	return new Promise((res, rej) => {
-		setTimeout(() => {
-			res()
-		}, ms)
-	})
+	var tween_int = tween(time, EASE_LINEAR, (x) => {
+		var orig_x = x
+		x = lerp(start, end, x)
+		GLOBAL_VOLUME = x
+		// print(x != end)
+		if (orig_x != 1) { volUpdate() }
+	}, false)
+	vol_tweens.push(tween_int)
+
+	return awaitTween(tween_int)
+	// let incr = (end - start)/rounds
+	// // let pol = Math.sign(start - end)
+	// let timeout_time = (time*1000)/rounds
+	// let i = 0
+	// return new Promise((res, rej) => {
+	// 	function loop() {
+	// 		GLOBAL_VOLUME = start+(incr*i)
+	// 		volUpdate()
+	// 		i += 1
+	// 		if (i < rounds) {
+	// 			setTimeout(loop, timeout_time)
+	// 		} else {
+	// 			GLOBAL_VOLUME = end
+	// 			res("done")
+	// 		}
+	// 	}
+	// 	setTimeout(loop, timeout_time)
+	// })
 }
 
 function randi(max) {
   return Math.floor(Math.random() * max);
-}
-
-Array.prototype.shuffle = function () {
-  let currentIndex = this.length,  randomIndex;
-
-  // While there remain elements to shuffle...
-  while (currentIndex != 0) {
-
-    // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-
-    // And swap it with the current element.
-    [this[currentIndex], this[randomIndex]] = [
-      this[randomIndex], this[currentIndex]];
-  }
-}
-
-Array.prototype.insert = function (index, value) {
-	this.splice(index, 0, value)
-}
-
-Array.prototype.move = function (old_index, new_index) {
-    if (new_index >= this.length) {
-        var k = new_index - this.length + 1;
-        while (k--) {
-            this.push(undefined);
-        }
-    }
-    this.splice(new_index, 0, this.splice(old_index, 1)[0]);
-}
-
-Array.prototype.remove = function (index) {
-    if (index > -1 && index < this.length-1) {
-    	var return_value = this.splice(index, 1)
-    	return return_value
-    }
 }
 
 if( typeof Element.prototype.clearChildren === 'undefined' ) {
@@ -103,3 +71,58 @@ function stopLoading(key) {
 }
 
 startLoading("auth")
+
+if (!query_params.includes("mobile")) {
+	new Elem("fullscreen-button").style.setProperty("display", "none")
+}
+
+async function fullscreenPage() {
+	var topElem = new Elem("fullscreen-cont")
+	await topElem.elem.requestFullscreen()
+	new Elem('fullscreen-button').style.setProperty('display', 'none')
+	topElem.style.setProperty("background", "#151515")
+}
+
+function imageLoading() {
+	var unloaded_images = getClass("unloaded-image")
+	unloaded_images.forEach(track_elem => {
+		if (isElementInViewport(track_elem.elem) && (!track_elem.hasAttr("bottom"))) {
+			var src = track_elem.getAttr("loadSrc")
+			var seen = Number(track_elem.getAttr("seen"))
+
+			var valid = false
+			if (seen == -1) {
+				track_elem.setAttr("seen", Date.now())
+			} else {
+				valid = (Date.now() - seen >= 50)
+			}
+
+			if (valid) {
+				track_elem.classes.remove("unloaded-image")
+				track_elem.style = `background-image: linear-gradient(to top, color-mix(in srgb, var(--fade-color) 0%, #00000000), color-mix(in srgb, var(--fade-color) 100%, #00000000)), url(${src});`
+			}
+		} else {
+			track_elem.setAttr("seen", -1)
+		}
+	})
+
+	requestAnimationFrame(imageLoading)
+}
+requestAnimationFrame(imageLoading)
+
+function isElementInViewport (el) {
+
+    // Special bonus for those using jQuery
+    if (typeof jQuery === "function" && el instanceof jQuery) {
+        el = el[0];
+    }
+
+    var rect = el.getBoundingClientRect();
+
+    return (
+        rect.top >= -el.clientHeight &&
+        rect.left >= -el.clientWidth &&
+        rect.bottom <= ((window.innerHeight || document.documentElement.clientHeight) + el.clientHeight) && /* or $(window).height() */
+        rect.right <= ((window.innerWidth || document.documentElement.clientWidth) + el.clientWidth) /* or $(window).width() */
+    );
+}

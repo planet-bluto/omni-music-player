@@ -1,0 +1,1615 @@
+{
+  "version": "0.8.0-alpha.8.1",
+  "pan": {
+    "X": 34.89284,
+    "Y": 319.20807
+  },
+  "zoom": 0.450939804315567,
+  "currentPage": 0,
+  "properties": {
+    "CacheDirectory": ""
+  },
+  "pages": [
+    {
+      "id": 0,
+      "pan": {
+        "X": 34.892834,
+        "Y": 319.208
+      },
+      "zoom": 0.450939804315567,
+      "cards": [
+        {
+          "id": 0,
+          "rect": {
+            "X": -2720,
+            "Y": -320,
+            "W": 256,
+            "H": 128
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 128,
+          "contents": "Note",
+          "properties": {
+            "description": "Home Tab\nList of tracks, playlists, artists, tags, \u0026 queues",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 0,
+              "end": 9,
+              "joints": []
+            },
+            {
+              "start": 0,
+              "end": 10,
+              "joints": [
+                {
+                  "X": -2688,
+                  "Y": -96
+                }
+              ]
+            },
+            {
+              "start": 0,
+              "end": 11,
+              "joints": [
+                {
+                  "X": -2496,
+                  "Y": -96
+                }
+              ]
+            },
+            {
+              "start": 0,
+              "end": 12,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 1,
+          "rect": {
+            "X": -1152,
+            "Y": -256,
+            "W": 256,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 32,
+          "contents": "Note",
+          "properties": {
+            "description": "Pages rework",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 2,
+          "rect": {
+            "X": -1120,
+            "Y": -224,
+            "W": 256,
+            "H": 96
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 96,
+          "contents": "Note",
+          "properties": {
+            "description": "Need a way to implement subpages",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 3,
+          "rect": {
+            "X": -192,
+            "Y": -192,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "Stream Ready! Wow!",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 4,
+          "rect": {
+            "X": -160,
+            "Y": -160,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 64,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "Rework/Tweak Omni Parser",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 5,
+          "rect": {
+            "X": -1120,
+            "Y": -128,
+            "W": 256,
+            "H": 288
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 288,
+          "contents": "Note",
+          "properties": {
+            "description": "Instead of feeding track objs to queue functions, queue a custom queue obj with information about the context it's being queued from for history",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 6,
+          "rect": {
+            "X": -128,
+            "Y": -128,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 64,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "Make actually modular??",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 7,
+          "rect": {
+            "X": -160,
+            "Y": -96,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 64,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": true,
+            "description": "Accounts / Authentication",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 8,
+          "rect": {
+            "X": -128,
+            "Y": -64,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": true,
+            "description": "Settings Sync to DB",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 9,
+          "rect": {
+            "X": -3392,
+            "Y": -32,
+            "W": 256,
+            "H": 64
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 64,
+          "contents": "Note",
+          "properties": {
+            "description": "Playlist SubPage\nList of tracks",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 9,
+              "end": 19,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "rect": {
+            "X": -2944,
+            "Y": -32,
+            "W": 256,
+            "H": 96
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 96,
+          "contents": "Note",
+          "properties": {
+            "description": "Artist SubPage\nList of tracks \u0026 playlists",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 10,
+              "end": 22,
+              "joints": []
+            },
+            {
+              "start": 10,
+              "end": 23,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "rect": {
+            "X": -2496,
+            "Y": -32,
+            "W": 256,
+            "H": 64
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 64,
+          "contents": "Note",
+          "properties": {
+            "description": "Queue SubPage\nList of tracks",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 11,
+              "end": 20,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "rect": {
+            "X": -2080,
+            "Y": -32,
+            "W": 256,
+            "H": 64
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 64,
+          "contents": "Note",
+          "properties": {
+            "description": "Tag Popup\nCan lead to...",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 12,
+              "end": 15,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "rect": {
+            "X": -160,
+            "Y": -32,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 64,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": true,
+            "description": "Page Loading Indicator",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 14,
+          "rect": {
+            "X": -160,
+            "Y": 0,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "Library Page",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 15,
+          "rect": {
+            "X": -2080,
+            "Y": 32,
+            "W": 256,
+            "H": 96
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 96,
+          "contents": "Note",
+          "properties": {
+            "description": "Tag SubPage\nList of tracks (with sorting)",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 15,
+              "end": 27,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "rect": {
+            "X": -128,
+            "Y": 32,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "Empty Library Handling",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 17,
+          "rect": {
+            "X": -128,
+            "Y": 64,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": true,
+            "description": "Load Library Based on Auth Info",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 18,
+          "rect": {
+            "X": 832,
+            "Y": 64,
+            "W": 416,
+            "H": 288
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 416,
+          "uncollapsedSizeY": 288,
+          "contents": "Note",
+          "properties": {
+            "description": "\"Importing From Playlist\"\n- You may need to make a text input that validates links  in real time and won't allow form submission until valid\n- Also make sure you allow a variable amount (think like the Jukebox collaborators element)",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 19,
+          "rect": {
+            "X": -3392,
+            "Y": 96,
+            "W": 256,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 32,
+          "contents": "Note",
+          "properties": {
+            "description": "Track Popup",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 20,
+          "rect": {
+            "X": -2496,
+            "Y": 96,
+            "W": 256,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 32,
+          "contents": "Note",
+          "properties": {
+            "description": "Track Popup",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 76,
+          "rect": {
+            "X": -160,
+            "Y": 96,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "Vertical Layout"
+          }
+        },
+        {
+          "id": 22,
+          "rect": {
+            "X": -3072,
+            "Y": 128,
+            "W": 256,
+            "H": 32
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 32,
+          "contents": "Note",
+          "properties": {
+            "description": "Track Popup",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 23,
+          "rect": {
+            "X": -2816,
+            "Y": 128,
+            "W": 256,
+            "H": 64
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 64,
+          "contents": "Note",
+          "properties": {
+            "description": "Playlist SubPage\nList of tracks",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 23,
+              "end": 30,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 77,
+          "rect": {
+            "X": -160,
+            "Y": 128,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "BluDB Delete Key method"
+          }
+        },
+        {
+          "id": 25,
+          "rect": {
+            "X": -1120,
+            "Y": 160,
+            "W": 256,
+            "H": 256
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 256,
+          "contents": "Note",
+          "properties": {
+            "description": "Most of the pages are going to be 'tracklist-likes', which uses that grid format I'm already using to display tracks, and includes... ",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 21,
+          "rect": {
+            "X": -160,
+            "Y": 160,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "Tags Page",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 27,
+          "rect": {
+            "X": -2080,
+            "Y": 192,
+            "W": 256,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 32,
+          "contents": "Note",
+          "properties": {
+            "description": "Track Popup",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 24,
+          "rect": {
+            "X": -128,
+            "Y": 192,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "New Tags Button",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 26,
+          "rect": {
+            "X": -96,
+            "Y": 224,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 64,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "Importing From Playlists",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 26,
+              "end": 18,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 30,
+          "rect": {
+            "X": -2816,
+            "Y": 256,
+            "W": 256,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 32,
+          "contents": "Note",
+          "properties": {
+            "description": "Track Popup",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 28,
+          "rect": {
+            "X": -128,
+            "Y": 256,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "Adding Tags to Queue",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 29,
+          "rect": {
+            "X": -128,
+            "Y": 288,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "OmniPlay Implementation",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 31,
+          "rect": {
+            "X": -128,
+            "Y": 320,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "Add Multiple Songs  to Tag",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 34,
+          "rect": {
+            "X": -736,
+            "Y": 352,
+            "W": 256,
+            "H": 64
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 64,
+          "contents": "Note",
+          "properties": {
+            "description": "Opens popup (hold to open)",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 32,
+          "rect": {
+            "X": -160,
+            "Y": 352,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": true,
+            "description": "Playlist Page",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 36,
+          "rect": {
+            "X": -3424,
+            "Y": 384,
+            "W": 256,
+            "H": 64
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 64,
+          "contents": "Note",
+          "properties": {
+            "description": "Playlists Tab\nList of playlists",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 36,
+              "end": 48,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 37,
+          "rect": {
+            "X": -2976,
+            "Y": 384,
+            "W": 256,
+            "H": 64
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 64,
+          "contents": "Note",
+          "properties": {
+            "description": "Artists Tab\nList of artists",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 37,
+              "end": 49,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 38,
+          "rect": {
+            "X": -2464,
+            "Y": 384,
+            "W": 256,
+            "H": 64
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 64,
+          "contents": "Note",
+          "properties": {
+            "description": "Queues Tab\nList of queues",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 38,
+              "end": 50,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 39,
+          "rect": {
+            "X": -2112,
+            "Y": 384,
+            "W": 256,
+            "H": 64
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 64,
+          "contents": "Note",
+          "properties": {
+            "description": "Tags Tab\nList of tags",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 39,
+              "end": 51,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 33,
+          "rect": {
+            "X": -128,
+            "Y": 384,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": true,
+            "description": "New Playlist Button",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 41,
+          "rect": {
+            "X": -1088,
+            "Y": 416,
+            "W": 256,
+            "H": 32
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 32,
+          "contents": "Note",
+          "properties": {
+            "description": "Home",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 41,
+              "end": 55,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 35,
+          "rect": {
+            "X": -96,
+            "Y": 416,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": true,
+            "description": "Importing From Playlists (similar to tags)",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 43,
+          "rect": {
+            "X": -1088,
+            "Y": 448,
+            "W": 256,
+            "H": 32
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 32,
+          "contents": "Note",
+          "properties": {
+            "description": "Tracks",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 43,
+              "end": 34,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 44,
+          "rect": {
+            "X": -736,
+            "Y": 448,
+            "W": 256,
+            "H": 64
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 64,
+          "contents": "Note",
+          "properties": {
+            "description": "Opens subpage of tracks",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 40,
+          "rect": {
+            "X": -160,
+            "Y": 448,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "Home/History Page",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 46,
+          "rect": {
+            "X": -1088,
+            "Y": 480,
+            "W": 256,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 32,
+          "contents": "Note",
+          "properties": {
+            "description": "Playlists",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 46,
+              "end": 44,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 42,
+          "rect": {
+            "X": -128,
+            "Y": 480,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "nowplaying event to DB",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 48,
+          "rect": {
+            "X": -3424,
+            "Y": 512,
+            "W": 256,
+            "H": 64
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 64,
+          "contents": "Note",
+          "properties": {
+            "description": "Playlist SubPage\nList of tracks",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 48,
+              "end": 61,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 49,
+          "rect": {
+            "X": -2976,
+            "Y": 512,
+            "W": 256,
+            "H": 96
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 96,
+          "contents": "Note",
+          "properties": {
+            "description": "Artist SubPage\nList of tracks \u0026 playlists",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 49,
+              "end": 64,
+              "joints": []
+            },
+            {
+              "start": 49,
+              "end": 65,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 50,
+          "rect": {
+            "X": -2464,
+            "Y": 512,
+            "W": 256,
+            "H": 64
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 64,
+          "contents": "Note",
+          "properties": {
+            "description": "Queue SubPage\nList of tracks",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 50,
+              "end": 62,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 51,
+          "rect": {
+            "X": -2112,
+            "Y": 512,
+            "W": 256,
+            "H": 64
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 64,
+          "contents": "Note",
+          "properties": {
+            "description": "Tag Popup\nCan lead to...",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 51,
+              "end": 57,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 52,
+          "rect": {
+            "X": -1088,
+            "Y": 512,
+            "W": 256,
+            "H": 32
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 32,
+          "contents": "Note",
+          "properties": {
+            "description": "Tags",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 52,
+              "end": 34,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 45,
+          "rect": {
+            "X": -128,
+            "Y": 512,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "Loading Tracks",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 54,
+          "rect": {
+            "X": -1088,
+            "Y": 544,
+            "W": 256,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 32,
+          "contents": "Note",
+          "properties": {
+            "description": "Artists",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 54,
+              "end": 55,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 55,
+          "rect": {
+            "X": -736,
+            "Y": 544,
+            "W": 256,
+            "H": 64
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 64,
+          "contents": "Note",
+          "properties": {
+            "description": "Opens subpage of tracklikes",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 47,
+          "rect": {
+            "X": -128,
+            "Y": 544,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "Loading Tags",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 57,
+          "rect": {
+            "X": -2112,
+            "Y": 576,
+            "W": 256,
+            "H": 96
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 96,
+          "contents": "Note",
+          "properties": {
+            "description": "Tag SubPage\nList of tracks (with sorting)",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 57,
+              "end": 68,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 58,
+          "rect": {
+            "X": -1088,
+            "Y": 576,
+            "W": 256,
+            "H": 32
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 32,
+          "contents": "Note",
+          "properties": {
+            "description": "Queues",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 53,
+          "rect": {
+            "X": -128,
+            "Y": 576,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "Loading Playlist",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 56,
+          "rect": {
+            "X": -160,
+            "Y": 608,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "Misc. Frontend",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 61,
+          "rect": {
+            "X": -3424,
+            "Y": 640,
+            "W": 256,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 32,
+          "contents": "Note",
+          "properties": {
+            "description": "Track Popup",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 62,
+          "rect": {
+            "X": -2464,
+            "Y": 640,
+            "W": 256,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 32,
+          "contents": "Note",
+          "properties": {
+            "description": "Track Popup",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 59,
+          "rect": {
+            "X": -128,
+            "Y": 640,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": true,
+            "description": "Image Loading",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 64,
+          "rect": {
+            "X": -3104,
+            "Y": 672,
+            "W": 256,
+            "H": 32
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 32,
+          "contents": "Note",
+          "properties": {
+            "description": "Track Popup",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 65,
+          "rect": {
+            "X": -2848,
+            "Y": 672,
+            "W": 256,
+            "H": 64
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 64,
+          "contents": "Note",
+          "properties": {
+            "description": "Playlist SubPage\nList of tracks",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 65,
+              "end": 70,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 60,
+          "rect": {
+            "X": -128,
+            "Y": 672,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "UI Toasts",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 63,
+          "rect": {
+            "X": -128,
+            "Y": 704,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 64,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": true,
+            "description": "Fullscreen on mobile :)",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 68,
+          "rect": {
+            "X": -2112,
+            "Y": 736,
+            "W": 256,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 32,
+          "contents": "Note",
+          "properties": {
+            "description": "Track Popup",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 66,
+          "rect": {
+            "X": -160,
+            "Y": 736,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "Misc. Backend",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 67,
+          "rect": {
+            "X": -128,
+            "Y": 768,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "Patch Promise Errors",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 70,
+          "rect": {
+            "X": -2848,
+            "Y": 800,
+            "W": 256,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 256,
+          "uncollapsedSizeY": 32,
+          "contents": "Note",
+          "properties": {
+            "description": "Track Popup",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 69,
+          "rect": {
+            "X": -128,
+            "Y": 800,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 64,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "Only send full Buffers (for now)",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 69,
+              "end": 71,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 78,
+          "rect": {
+            "X": -128,
+            "Y": 832,
+            "W": 576,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 576,
+          "uncollapsedSizeY": 32,
+          "contents": "Checkbox",
+          "properties": {
+            "checked": false,
+            "description": "Poor network handling"
+          }
+        },
+        {
+          "id": 71,
+          "rect": {
+            "X": -1024,
+            "Y": 960,
+            "W": 704,
+            "H": 160
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 704,
+          "uncollapsedSizeY": 160,
+          "contents": "Note",
+          "properties": {
+            "description": "\"Only send full Buffers\"\nSlightly longer loading time, but the method of playing a stream for a few seconds and then switching to a buffer is not well implemented right now because there's a noticieable stutter on a song start",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 72,
+          "rect": {
+            "X": -2592,
+            "Y": 1056,
+            "W": 544,
+            "H": 160
+          },
+          "collapsed": "CollapsedNone",
+          "uncollapsedSizeX": 544,
+          "uncollapsedSizeY": 160,
+          "contents": "Note",
+          "properties": {
+            "description": "erm, settings notes...\n- lol, don't send schema from back-end you maniac\n\n- ",
+            "filepath": ""
+          }
+        },
+        {
+          "id": 73,
+          "rect": {
+            "X": -3424,
+            "Y": 1152,
+            "W": 672,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 672,
+          "uncollapsedSizeY": 32,
+          "contents": "Note",
+          "properties": {
+            "description": "Front-End Settings Update (w/ Key: Value)",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 73,
+              "end": 74,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 74,
+          "rect": {
+            "X": -3424,
+            "Y": 1280,
+            "W": 672,
+            "H": 512
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 672,
+          "uncollapsedSizeY": 512,
+          "contents": "Note",
+          "properties": {
+            "description": "Received on Back-End\nIterates thru keys and plugs each key into a switch case that assigns it to the userDB. While there is a settings object on a userDB object, there is some things (like auth info) that can be set from settings that wouldn't want to be indexed under the 'settings' key :)\n\nFor sub-keys, just manually define a key for them, don't wooooory surely it won't get extremely tedious...\n\nWAIT, so just have a key assigned to each setting entry and then the default on the switch case just assumes that it's root is the 'settings' key on the userDB, but you can have ",
+            "filepath": ""
+          },
+          "links": [
+            {
+              "start": 74,
+              "end": 75,
+              "joints": []
+            }
+          ]
+        },
+        {
+          "id": 75,
+          "rect": {
+            "X": -3424,
+            "Y": 2048,
+            "W": 672,
+            "H": 32
+          },
+          "collapsed": "CollapsedShade",
+          "uncollapsedSizeX": 672,
+          "uncollapsedSizeY": 32,
+          "contents": "Note",
+          "properties": {
+            "description": "Changes written to DB :D",
+            "filepath": ""
+          }
+        }
+      ]
+    }
+  ],
+  "savedimages": {}
+}

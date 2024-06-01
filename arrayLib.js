@@ -47,3 +47,24 @@ Array.prototype.asyncForEach = async function(func) {
 		loop()
 	})
 }
+
+Array.prototype.remove = function (ind) {
+	if (ind < this.length-1) {
+		return this.splice(ind, 1)[0]
+	} else {
+		return this.pop()
+	}
+}
+
+Array.prototype.pat = function (entry) {
+	var ind = this.indexOf(entry)
+	if (ind == -1) {
+		this.push(entry)
+	} else {
+		this[ind] = entry
+	}
+}
+
+Array.prototype.remove_duplicates = function () {
+	return this.filter((entry, ind) => this.indexOf(entry) == ind)
+}
