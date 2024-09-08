@@ -535,7 +535,8 @@ OmniEvents.on("logged_in", () => {
 	OmniAPI.loggedIn = true
 
 	OmniAPI.GET("/me/library").then(tracks => {
-		cache = tracks
+		cache = tracks.map(track => track.omni_id)
+		OmniEvents._fire("cached", tracks)
 	})
 })
 
@@ -947,7 +948,7 @@ async function switchPage( pageName, ...args ) {
 		case 'top-tracks':
 			startLoading("page")
 			pending_tracks = true
-			socket.emitWithAck("tracks").then(tracks => {
+			OmniEvents.on("cached", (tracks) => {
 				var trackElems = tracks.map(track => trackElem(track))
 				var res = render(trackElems, "top-tracks")
 				if (res) { stopLoading("page") }

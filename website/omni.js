@@ -551,23 +551,20 @@ async function next() {
 	if (QueueIndex+1 < Queue.length) {
 		play(Queue[QueueIndex+1], QueueIndex+1)
 	} else {
-		if (true) { // hookup settings at some point... wait no I don't have to now EEHEEEHEE
-			if (omni_play_queue.length > 0) {
-				var trackID = omni_play_queue.shift()
-				var tracks = await fetchTracks(trackID)
-				var track = tracks[0]
+		print("hai 1")
+		if (omni_play_queue.length > 0) {
+			print("hai A1")
+			var trackID = omni_play_queue.shift()
+			var tracks = await fetchTracks(trackID)
+			var track = tracks[0]
 
-				var fut_ind = QueueIndex+1
-				insertTrackToQueue(track, fut_ind)
-				play(track, fut_ind)
+			var fut_ind = QueueIndex+1
+			insertTrackToQueue(track, fut_ind)
+			play(track, fut_ind)
 
-				var omniPlayEntry = omni_play_cache.find(trackEntry => trackEntry.id == track.omni_id)
-				print("Related: ", omniPlayEntry)
-
-			} else {
-				omni_play()
-			}
-		} else { // go die 
+			var omniPlayEntry = omni_play_cache.find(trackEntry => trackEntry.id == track.omni_id)
+			print("Related: ", omniPlayEntry)
+		} else if ((await omni_play()) == false) {
 			random_song()
 		}
 	}
@@ -585,12 +582,24 @@ function prev() {
 	}
 }
 
+// why please
+
 var omni_play_queue = []
 var omni_play_cache = []
 
+
+
 async function omni_play() {
-	var possible_tracks = await OmniAPI.GET(`/related/${PlayingSong.track.omni_id}`)
+	print("hai B1")
+	let possible_tracks;
+	try {
+		possible_tracks = await OmniAPI.GET(`/related/${PlayingSong.track.omni_id}`)
+	} catch(err) {
+		possible_tracks = []
+	}
 	omni_play_cache = possible_tracks
+	if (possible_tracks.length == 0) { return false }
+	print("hai B2", possible_tracks)
 
 	var related_regions = {}
 
@@ -612,12 +621,14 @@ async function omni_play() {
 	if (entire_queue.length > 0) {
 		omni_play_queue = entire_queue
 		next()
+		return true
 	} else {
-		random_song()
+		return false
 	}
 }
 
 async function random_song() {
+	print("hai C1")
 	// hey temp queue is dying.
 	//// cache all the IDs of songs in the library
 	//// store all the played songs in the 'played' array (renamed to 'cache' because 'played' is the IDs you fucking idiot)
@@ -641,6 +652,8 @@ async function random_song() {
 		track = tracks[0]
 	}
 
+	print("Random: ", track)
+
 	if (track != null) { // hold diss
 		var fut_ind = QueueIndex+1
 		insertTrackToQueue(track, fut_ind)
@@ -648,8 +661,6 @@ async function random_song() {
 		// pushTrackToQueue(track, true)
 		// play(tracks[0], fut_ind, true)
 		return track
-	} else {
-		return random_song()
 	}
 }
 
