@@ -103,7 +103,7 @@ function canvasSetup(url) {
 		}
 	}
 
-	if (!query_params.includes("mobile")) { renderFrame() }
+	if (!query_params.includes("mobile") && !query_params.includes("streaming")) { renderFrame() }
 }
 
 var last_emit_progress = null
@@ -344,9 +344,7 @@ async function play(omni_track, q_ind = -1, focus = false) {
 		// canvasClear(PlayingSong.track.url)
 	}
 
-	var playhead_int = setInterval(() => {
-
-	}, 100)
+	var playhead_int = 0
 
 	PlayingSong = {
 		"track": omni_track,
@@ -546,9 +544,18 @@ function getIndexFromURL(url) {
 	return ind
 }
 
+function play_immediately(track) {
+	var fut_ind = QueueIndex+1
+	insertTrackToQueue(track, fut_ind)
+	play(track, fut_ind)
+}
+
 async function next() {
 	// print("Would skip...")
-	if (QueueIndex+1 < Queue.length) {
+	if (play_next_queue.length > 0) {
+		var track = play_next_queue.shift()
+		play_immediately(track)
+	} else if (QueueIndex+1 < Queue.length) {
 		play(Queue[QueueIndex+1], QueueIndex+1)
 	} else {
 		if (true) { // hookup settings at some point... wait no I don't have to now EEHEEEHEE
@@ -557,9 +564,7 @@ async function next() {
 				var tracks = await fetchTracks(trackID)
 				var track = tracks[0]
 
-				var fut_ind = QueueIndex+1
-				insertTrackToQueue(track, fut_ind)
-				play(track, fut_ind)
+				play_immediately(track)
 
 				var omniPlayEntry = omni_play_cache.find(trackEntry => trackEntry.id == track.omni_id)
 				print("Related: ", omniPlayEntry)
@@ -617,7 +622,13 @@ async function omni_play() {
 	}
 }
 
+var play_next_queue = []
+function add_to_play_next_queue(track) {
+	play_next_queue.push(track) // I swear there would be more
+}
+
 async function random_song() {
+	print("random_song...")
 	// hey temp queue is dying.
 	//// cache all the IDs of songs in the library
 	//// store all the played songs in the 'played' array (renamed to 'cache' because 'played' is the IDs you fucking idiot)
@@ -649,7 +660,7 @@ async function random_song() {
 		// play(tracks[0], fut_ind, true)
 		return track
 	} else {
-		return random_song()
+		return null
 	}
 }
 

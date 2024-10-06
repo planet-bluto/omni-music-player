@@ -20,3 +20,30 @@
 // }
 
 // main()
+
+const print = console.log
+
+var ytdl = require('ytdl-core')
+const youtubedl = require('youtube-dl-exec')
+var fs = require('fs')
+var path = require('path')
+var {spawn} = require('node:child_process')
+
+const LINK = "https://www.youtube.com/watch?v=-LwBbLa_Vhc"
+
+async function main() {
+  print(youtubedl.constants.YOUTUBE_DL_PATH)
+  var sub = spawn(youtubedl.constants.YOUTUBE_DL_PATH, ["-o", "-", `${LINK}`, "-x", "-q", "--no-warnings"])
+  sub.stdout.pipe(process.stdout)
+  // var sub = youtubedl.exec('https://www.youtube.com/watch?v=6xKWiCMKKJg', {
+  //   o: "-",
+  //   x: true,
+  //   q: true,
+  //   noWarnings: true,
+  //   s: true,
+  // })
+}
+
+main()
+// var stream = ytdl("https://www.youtube.com/watch?v=vW9d8-8gm7o")
+// stream.pipe(fs.createWriteStream('test.mp4'))

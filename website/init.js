@@ -84,31 +84,39 @@ async function fullscreenPage() {
 }
 
 function imageLoading() {
-	var unloaded_images = getClass("unloaded-image")
-	unloaded_images.forEach(track_elem => {
-		if (isElementInViewport(track_elem.elem) && (!track_elem.hasAttr("bottom"))) {
-			var src = track_elem.getAttr("loadSrc")
-			var seen = Number(track_elem.getAttr("seen"))
+	if (query_params.includes("mobile") && query_params.includes("streaming")) { return }
 
-			var valid = false
-			if (seen == -1) {
-				track_elem.setAttr("seen", Date.now())
-			} else {
-				valid = (Date.now() - seen >= 50)
-			}
-
-			if (valid) {
-				track_elem.classes.remove("unloaded-image")
-				track_elem.style = `background-image: linear-gradient(to top, color-mix(in srgb, var(--fade-color) 0%, #00000000), color-mix(in srgb, var(--fade-color) 100%, #00000000)), url(${src});`
-			}
-		} else {
+	let unloaded_images = getClass("unloaded-image")
+	unloaded_images = unloaded_images.filter(track_elem => {
+		let to_return = (isElementInViewport(track_elem.elem) && (!track_elem.hasAttr("bottom")))
+		if (!to_return && Number(track_elem.getAttr("seen")) != -1) {
 			track_elem.setAttr("seen", -1)
 		}
+		return to_return
 	})
 
-	requestAnimationFrame(imageLoading)
+	if (unloaded_images.length > 0) {
+		unloaded_images.forEach(track_elem => {
+			var src = track_elem.getAttr("loadSrc")
+			
+			setTimeout(() => {
+				if (isElementInViewport(track_elem.elem)) {
+					// print("loaded image: ", src)
+					track_elem.classes.remove("unloaded-image")
+					track_elem.style = `background-image: linear-gradient(to top, color-mix(in srgb, var(--fade-color) 0%, #00000000), color-mix(in srgb, var(--fade-color) 100%, #00000000)), url(${src});`
+				}
+			}, 50)
+		})
+	}
+
+	// requestAnimationFrame(imageLoading)
 }
-requestAnimationFrame(imageLoading)
+
+// if (!query_params.includes("mobile") && !query_params.includes("streaming")) { imageLoading() }
+
+new Elem("main").on("scroll", e => {
+	imageLoading()
+})
 
 function isElementInViewport (el) {
 

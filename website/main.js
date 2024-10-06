@@ -252,7 +252,19 @@ if (query_params.includes("streaming")) {
 		}
 	})
 	
-	socket.on("$stream_play_next")
+	socket.on("$stream_play_next", async (userName, input, callback) => {
+		var tracks = await fetchTracks(input)
+		if (tracks.length == 1) {
+			// insertTracksToQueue(tracks, Infinity, false)
+			add_to_play_next_queue(tracks[0])
+
+			var track = tracks[0]
+			showToast(`${userName}'s track added to play next queue!`, {image: track.image})
+			callback(track)
+		} else {
+			callback(null)
+		}
+	})
 }
 
 var cache = []
@@ -521,7 +533,7 @@ async function authCheck() {
 			var resJSON = await res.json()
 			OmniAPI.user = resJSON
 			OmniEvents._fire("logged_in")
-			stopLoading("auth")
+			stopLoading("auth")	
 		} else {
 			var resText = await res.text()
 			showAuthPopup()
@@ -535,6 +547,7 @@ OmniEvents.on("logged_in", () => {
 	OmniAPI.loggedIn = true
 
 	OmniAPI.GET("/me/library").then(tracks => {
+		print(tracks)
 		cache = tracks
 	})
 })
@@ -566,12 +579,14 @@ function trackPopups(track) {
 			var tags = await OmniAPI.GET("/me/tags")
 			var form_elements = [Form.Header("Edit Tags")]
 			tags.forEach(tag => {
-				var trackEntry = tag.tracks.find(thisTrackEntry => thisTrackEntry.id == track.omni_id)
-				var current_weight = (trackEntry != null ? (trackEntry.weight * 100.0) : 0) + 1
-				print(current_weight)
-
-				form_elements.push(Form.Label(tag.title))
-				form_elements.push(Form.InputRange(`tag ${tag.id}`, {min: 1, max: 101, step: 5, value: current_weight}))
+				if (Array.isArray(tag.tracks)) {
+					var trackEntry = tag.tracks.find(thisTrackEntry => thisTrackEntry.id == track.omni_id)
+					var current_weight = (trackEntry != null ? (trackEntry.weight * 100.0) : 0) + 1
+					print(current_weight)
+	
+					form_elements.push(Form.Label(tag.title))
+					form_elements.push(Form.InputRange(`tag ${tag.id}`, {min: 1, max: 101, step: 5, value: current_weight}))
+				}
 			})
 
 			closePopup()
@@ -947,11 +962,18 @@ async function switchPage( pageName, ...args ) {
 		case 'top-tracks':
 			startLoading("page")
 			pending_tracks = true
-			socket.emitWithAck("tracks").then(tracks => {
-				var trackElems = tracks.map(track => trackElem(track))
-				var res = render(trackElems, "top-tracks")
-				if (res) { stopLoading("page") }
-			})
+			if (true) {
+				socket.emitWithAck("tracks").then(tracks => {
+					var trackElems = tracks.map(track => trackElem(track))
+					var res = render(trackElems, "top-tracks")
+
+					imageLoading()
+					
+					if (res) { stopLoading("page") }
+				})
+			} else {
+				stopLoading("page")
+			}
 		break;
 		case 'settings-button':
 			startLoading("page")

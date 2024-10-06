@@ -1,5 +1,8 @@
 global.print = console.log
 
+const NodeCache = require( "node-cache" )
+const bufferCache = new NodeCache( { stdTTL: 100, checkperiod: 120 } )
+
 require('dotenv').config()
 var OmniCore = require("./omni_core.js")
 var { getStream } = OmniCore
@@ -11,16 +14,24 @@ var fs = require("node:fs/promises")
 OmniCore.app.get("/mediastart", async (req, res) => {
   var thisURL = req.query.url
   if (thisURL != "") {
-    var {stream, mode, start, end} = await getStream(thisURL, req.headers.range)
-    switch (mode) {
-      // case "REMOTE":
-      //   res.redirect(thisURL)
-      // break;
-      // case "BC":
-      //   res.redirect(stream)
-      // break;
-      default:
-        stream.pipe(res)
+    var cached = bufferCache.has(thisURL)
+
+    if (!cached) {
+      var {stream, mode, start, end} = await getStream(thisURL, req.headers.range)
+      switch (mode) {
+        // case "REMOTE":
+        //   res.redirect(thisURL)
+        // break;
+        // case "BC":
+        //   res.redirect(stream)
+        // break;
+        default:
+          stream.pipe(res)
+      }
+    } else {
+      var buf = bufferCache.get(thisURL)
+      bufferCache.set(thisURL, buf, 60000 * 5) // 5 minute cache
+      res.send(buf)
     }
     
   }
@@ -57,19 +68,24 @@ OmniCore.app.get("/media", async (req, res) => {
       //   res.redirect(stream)
       // break;
       default:
-        streamToBuffer(stream, (err, buf) => {
-        	total = buf.length
-        	end = end ? parseInt(end, 10) : total
-        	chunksize = (end-start)+1
+        var cached = bufferCache.has(thisURL)
 
-			// res.set('Content-Range', 'bytes ' + start + '-' + end + '/' + total)
-			// res.set('Accept-Ranges', 'bytes')
-			// res.set('Content-Length', chunksize)
-			// res.set('Content-Type', 'audio/mpeg')
+        if (cached) {
+          var buf = bufferCache.get(thisURL)
+        } else {
+          var buf = await (new Promise((res, rej) => {
+            streamToBuffer(stream, (err, this_buf) => {
+              res(this_buf)
+            })
+          }))
+        }
 
-        	// res.send(buf.subarray(start, end))
-        	res.send(buf)
-        })
+        total = buf.length
+        end = end ? parseInt(end, 10) : total
+        chunksize = (end-start)+1
+
+        bufferCache.set(thisURL, buf, 60000 * 5) // 5 minute cache
+        res.send(buf)
     }
   }
 })

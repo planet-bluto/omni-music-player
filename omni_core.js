@@ -1,5 +1,7 @@
 const print = console.log
 
+var {spawn} = require('node:child_process')
+
 var {SuperOmniParser, OmniParser, MultiLoader} = require('omni-parser')
 var raw_omni_parse = OmniParser()
 // var raw_multi_load = MultiLoader()
@@ -50,14 +52,25 @@ var omni_parse = async (...args) => {
 var SoundCloud = require("scdl-core").SoundCloud
 SoundCloud.clientId = (process.env["SC_CLIENT_ID"] || "8BBZpqUP1KSN4W6YB64xog2PX4Dw98b1")
 var bcscrape = require('bandcamp-scraper')
-var ytdl = require('bluto-dl')
+var ytdl_og = require('ytdl-core')
+var youtubedl = require('youtube-dl-exec')
+const ytdlIsDying = true
+
+async function fetchYoutubeStream(url) {
+	if (ytdlIsDying) {
+		var sub = spawn(youtubedl.constants.YOUTUBE_DL_PATH, ["-o", "-", `${url}`, "-x", "-q", "--no-warnings"])
+		return sub.stdout
+	} else {
+		return ytdl_og(url, { filter: "audioonly", range: {start: start, end: end}})
+	}
+}
 
 var fs = require('fs')
 var path = require('path')
 var Readable = require('node:stream').Readable
 var fetch = require('node-fetch')
 var express = require('express')
-const cors = require('cors') 
+const cors = require('cors')
 var jwt = require('jsonwebtoken')
 const { Stream } = require('stream')
 
@@ -137,7 +150,7 @@ class OmniCoreClass {
 				}
 			}
 			
-			return ytdl(input, { filter: "audioonly", range: {start: start, end: end}})
+			return fetchYoutubeStream(input)
 		}
 
 	  var song_length = 1000
