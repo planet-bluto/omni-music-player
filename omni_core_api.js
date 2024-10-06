@@ -518,25 +518,31 @@ module.exports = (omniCore => {
 
 	// ENDPOINT: GET library //
 	authGET("/me/library", async (userDB, req, res) => {
-		var userObj = userDB.data
+		if (true) {
+			var test_tracks = require("./soundcloud_likes.json")
 
-		var client_id = userObj?.auth_info?.soundcloud?.client_id
-		var oauth = userObj?.auth_info?.soundcloud?.oauth
+			res.send(test_tracks)
+		} else {
+			var userObj = userDB.data
 
-		var response = await fetch(`https://api-v2.soundcloud.com/me/track_likes/ids?limit=5000&client_id=${(client_id || "ffMw8NQS7WzQJYzQ0qvByPCqgm2EGAje")}`, {headers: {"Authorization": (oauth || "OAuth 2-294546-200230716-0URUIYJPzUgntj")}})
-		var body = await response.text()
+			var client_id = userObj?.auth_info?.soundcloud?.client_id
+			var oauth = userObj?.auth_info?.soundcloud?.oauth
 
-		try {
-			if (!response.ok) { new Error("fuck") }
+			var response = await fetch(`https://api-v2.soundcloud.com/me/track_likes/ids?limit=5000&client_id=${(client_id || "ffMw8NQS7WzQJYzQ0qvByPCqgm2EGAje")}`, {headers: {"Authorization": (oauth || "OAuth 2-294546-200230716-0URUIYJPzUgntj")}})
+			var body = await response.text()
 
-			var data = JSON.parse(body)
-			var ids = data.collection
-			var tracks = ids.map(id => `SC_${id}`)
-			// print(ids)
+			try {
+				if (!response.ok) { new Error("fuck") }
 
-			res.send(tracks)
-		} catch (err) {
-			res.status(404).send(`Backend Error: ${err}` )
+				var data = JSON.parse(body)
+				var ids = data.collection
+				var tracks = ids.map(id => `SC_${id}`)
+				// print(ids)
+
+				res.send(tracks)
+			} catch (err) {
+				res.status(404).send(`Backend Error: ${err}` )
+			}
 		}
 	})
 
