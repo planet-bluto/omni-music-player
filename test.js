@@ -23,18 +23,21 @@
 
 const print = console.log
 
-var ytdl = require('ytdl-core')
+var ytdl = require("@distube/ytdl-core")
 const youtubedl = require('youtube-dl-exec')
 var fs = require('fs')
 var path = require('path')
 var {spawn} = require('node:child_process')
 
+var {OmniParser, MultiLoader} = require('omni-parser')
+var raw_omni_parse = OmniParser()
+
 const LINK = "https://www.youtube.com/watch?v=-LwBbLa_Vhc"
 
 async function main() {
-  print(youtubedl.constants.YOUTUBE_DL_PATH)
-  var sub = spawn(youtubedl.constants.YOUTUBE_DL_PATH, ["-o", "-", `${LINK}`, "-x", "-q", "--no-warnings"])
-  sub.stdout.pipe(process.stdout)
+  print(ytdl)
+  let info = await ytdl.getInfo(LINK)
+  print(info)
   // var sub = youtubedl.exec('https://www.youtube.com/watch?v=6xKWiCMKKJg', {
   //   o: "-",
   //   x: true,

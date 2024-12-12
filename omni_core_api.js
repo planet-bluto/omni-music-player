@@ -452,6 +452,19 @@ module.exports = (omniCore => {
 		res.send(response)
 	})
 
+	function getLikesPlaylist() {
+		var likes_tracks = require("./soundcloud_likes.json")
+		return {
+			id: "likes", 
+			title: "Soundcloud Likes",
+			desc: "All likes from Soundcloud!",
+			owner: "all",
+			visibility: 0,
+			unlazy: true,
+			tracks: likes_tracks
+		}
+	}
+	
 	// ENDPOINT: GET me/playlists //
 	authGET("/me/playlists", async (userDB, req, res) => {
 		var playlistObjs = []
@@ -460,6 +473,8 @@ module.exports = (omniCore => {
 		if (userObj.playlists) {
 			playlistObjs = await Promise.all(userObj.playlists.map(playlist_id => DB.fetch(`playlists/${playlist_id}`)))
 			playlistObjs = playlistObjs.map(playlistObj => playlistObj.data)
+			playlistObjs.reverse()
+			playlistObjs.unshift(getLikesPlaylist())
 		}
 
 		res.send(playlistObjs)
@@ -511,9 +526,12 @@ module.exports = (omniCore => {
 
 	// ENDPOINT: GET playlist //
 	unauthGET("/playlist/:id", async (req, res) => {
-		var playlistDB = await DB.fetch(`playlists/${req.params.id}`)
-
-		res.send(playlistDB.data)
+		if (req.params.id == "likes") {
+			res.send(getLikesPlaylist())
+		} else {
+			var playlistDB = await DB.fetch(`playlists/${req.params.id}`)
+			res.send(playlistDB.data)
+		}
 	})
 
 	// ENDPOINT: GET library //

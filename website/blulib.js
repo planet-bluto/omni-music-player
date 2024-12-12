@@ -228,8 +228,8 @@ function InputLink(elem) {
 
 // CONSTANTS //
 
-// const print = (...args) => { socket.emit("print", ...args); console.log(...args) }
-const print = console.log
+const print = (...args) => { socket.emit("print", ...args); console.log(...args) }
+// const print = console.log
 const body = new Elem(document.body)
 
 // UTILITIES //

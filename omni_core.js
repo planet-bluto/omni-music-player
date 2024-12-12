@@ -52,7 +52,7 @@ var omni_parse = async (...args) => {
 var SoundCloud = require("scdl-core").SoundCloud
 SoundCloud.clientId = (process.env["SC_CLIENT_ID"] || "8BBZpqUP1KSN4W6YB64xog2PX4Dw98b1")
 var bcscrape = require('bandcamp-scraper')
-var ytdl_og = require('ytdl-core')
+var ytdl_og = require("@distube/ytdl-core")
 var youtubedl = require('youtube-dl-exec')
 const ytdlIsDying = true
 
@@ -66,6 +66,7 @@ async function fetchYoutubeStream(url) {
 }
 
 var fs = require('fs')
+var fsPromise = require('fs/promises')
 var path = require('path')
 var Readable = require('node:stream').Readable
 var fetch = require('node-fetch')
@@ -213,48 +214,84 @@ var lastProgress = 0
 var lastDuration = Date.now()
 var lastStatus = "UNPAUSE"
 
-function SocketHandler(socket) {
-	async function sendLibrary() {
-		var sc_response = await fetch("https://api-v2.soundcloud.com/me/track_likes/ids?limit=5000&client_id=ffMw8NQS7WzQJYzQ0qvByPCqgm2EGAje", {headers: {"Authorization": "OAuth 2-294546-200230716-0URUIYJPzUgntj"}})
-		var sc_body = await sc_response.text()
+async function fetchLibrary() {
+	let amount = null
 
-		var bc_response = await fetch("https://bandcamp.com/api/fan/2/collection_summary", {
-		  "headers": {
-		    "accept": "application/json, text/javascript, */*; q=0.01",
-		    "accept-language": "en-US,en;q=0.9",
-		    "sec-ch-ua": "\"Chromium\";v=\"122\", \"Not(A:Brand\";v=\"24\", \"Microsoft Edge\";v=\"122\"",
-		    "sec-ch-ua-mobile": "?0",
-		    "sec-ch-ua-platform": "\"Windows\"",
-		    "sec-fetch-dest": "empty",
-		    "sec-fetch-mode": "cors",
-		    "sec-fetch-site": "same-origin",
-		    "x-requested-with": "XMLHttpRequest",
-		    "cookie": "client_id=F0E97DDDD87DD4509F0F01CB7BB4AB5A434AD075C96B265EC64ED153A5F67895; menubar_active_band=1646701357; _ga_05ZD6JPXYZ=GS1.1.1708050295.5.1.1708050297.0.0.0; _ga=GA1.2.669936070.1655046102; identity=7%097WIWKip9zGyMMzpV%2BnoUhIxNUl%2BgiriLq5fv7QyIy28%3D%09%7B%22id%22%3A793757296%2C%22ex%22%3A0%7D; js_logged_in=1; logout=%7B%22username%22%3A%22plush.gamer.456%40gmail.com%22%7D; fan_visits=9341303; _gid=GA1.2.1988290062.1710399751; BACKENDID3=flexocentral-hlht-2; session=1%09r%3A%5B%228443f0c0x1710399831%22%2C%22nilZ0f0x1710399827%22%2C%22nilZ0t2463350650x1710399777%22%5D%09t%3A1710399747%09bp%3A1%09c%3A1",
-		    "Referer": "https://bandcamp.com/blu_axolotl/wishlist",
-		    "Referrer-Policy": "no-referrer-when-downgrade"
-		  },
-		  "body": null,
-		  "method": "GET"
-		})
-		var bc_body = await bc_response.text()
-		print(bc_body)
-
+	if (amount == null) {
+		let res = await fetch(`https://api-v2.soundcloud.com/users/200230716?client_id=${(process.env["SC_CLIENT_ID"] || "8BBZpqUP1KSN4W6YB64xog2PX4Dw98b1")}`)
 		try {
-			if (!sc_response.ok) { new Error("fuck") }
-
-			var data = JSON.parse(sc_body)
-			var ids = data.collection
-			var tracks = ids.map(id => `SC_${id}`)
-			// print(ids)
-
-			socket.emit("library", tracks)
+			let user_model = JSON.parse(await res.text())
+			amount = user_model.likes_count
+			print("Got Like Count: ", amount)
 		} catch (err) {
-			print("fuck: ", err)
+			// ... 
 		}
 	}
 
-	// sendLibrary()
+	let sc_response = await fetch(`https://api-v2.soundcloud.com/users/200230716/track_likes?client_id=${(process.env["SC_CLIENT_ID"] || "8BBZpqUP1KSN4W6YB64xog2PX4Dw98b1")}${(amount == null ? "" : `&limit=${amount}`)}&offset=0&linked_partitioning=1&app_version=1690193099&app_locale=en`, {headers: {"Authorization": (process.env["SC_OAUTH2"] || "OAuth 2-294546-200230716-0URUIYJPzUgntj")}})
+	// var sc_response = await fetch("https://api-v2.soundcloud.com/me/track_likes/ids?limit=5000&client_id=ffMw8NQS7WzQJYzQ0qvByPCqgm2EGAje", {headers: {"Authorization": "OAuth 2-294546-200230716-0URUIYJPzUgntj"}})
+	var sc_body = await sc_response.text()
 
+	// print(sc_body)
+
+	// var bc_response = await fetch("https://bandcamp.com/api/fan/2/collection_summary", {
+	//   "headers": {
+	//     "accept": "application/json, text/javascript, */*; q=0.01",
+	//     "accept-language": "en-US,en;q=0.9",
+	//     "sec-ch-ua": "\"Chromium\";v=\"122\", \"Not(A:Brand\";v=\"24\", \"Microsoft Edge\";v=\"122\"",
+	//     "sec-ch-ua-mobile": "?0",
+	//     "sec-ch-ua-platform": "\"Windows\"",
+	//     "sec-fetch-dest": "empty",
+	//     "sec-fetch-mode": "cors",
+	//     "sec-fetch-site": "same-origin",
+	//     "x-requested-with": "XMLHttpRequest",
+	//     "cookie": "client_id=F0E97DDDD87DD4509F0F01CB7BB4AB5A434AD075C96B265EC64ED153A5F67895; menubar_active_band=1646701357; _ga_05ZD6JPXYZ=GS1.1.1708050295.5.1.1708050297.0.0.0; _ga=GA1.2.669936070.1655046102; identity=7%097WIWKip9zGyMMzpV%2BnoUhIxNUl%2BgiriLq5fv7QyIy28%3D%09%7B%22id%22%3A793757296%2C%22ex%22%3A0%7D; js_logged_in=1; logout=%7B%22username%22%3A%22plush.gamer.456%40gmail.com%22%7D; fan_visits=9341303; _gid=GA1.2.1988290062.1710399751; BACKENDID3=flexocentral-hlht-2; session=1%09r%3A%5B%228443f0c0x1710399831%22%2C%22nilZ0f0x1710399827%22%2C%22nilZ0t2463350650x1710399777%22%5D%09t%3A1710399747%09bp%3A1%09c%3A1",
+	//     "Referer": "https://bandcamp.com/blu_axolotl/wishlist",
+	//     "Referrer-Policy": "no-referrer-when-downgrade"
+	//   },
+	//   "body": null,
+	//   "method": "GET"
+	// })
+	// var bc_body = await bc_response.text()
+	// print(bc_body)
+
+	try {
+		if (!sc_response.ok) { new Error("fuck") }
+
+		var { collection } = (JSON.parse(sc_body))
+		var omni_tracks = []
+		collection.forEach(like_res => {
+				var track = like_res.track
+
+				// totalMS += track.full_duration
+
+				omni_tracks.push({
+						type: "SOUNDCLOUD",
+						title: track.title,
+						author: {name: track.user.username},
+						image: (track.artwork_url || track.user.avatar_url).replace("-large.jpg", "-t500x500.jpg"),
+						url: track.permalink_url,
+						omni_id: `SC_${track.id}`,
+						service: {
+								"id": track.id,
+								"code": "SC",
+								"name": "Soundcloud"
+						}
+				})
+		})
+		// print(ids)
+
+		// socket.emit("library", omni_tracks)
+		await fsPromise.writeFile("./soundcloud_likes.json", JSON.stringify(omni_tracks, null, 4), "utf-8")
+		print("Fetched Library!")
+	} catch (err) {
+		print("fuck: ", err)
+	}
+}
+
+fetchLibrary()
+
+function SocketHandler(socket) {
 	socket.onAny((eventName, eventObj) => {
 		var bits = eventName.split("_")
 		var prefix = bits.shift()
@@ -385,6 +422,8 @@ function SocketHandler(socket) {
 
 		data.collection
 	})
+
+	socket.on("print", console.log)
 
 	socket.on("$emit_nowplaying", ({track, timestamp}) => {
 		currentPlayingTrack = track

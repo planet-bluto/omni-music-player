@@ -4,3 +4,6 @@ package-lock.json
 credentials.json
 /nginx
 /db
+
+# It doesn't exist, I don't see it
+1733983992760-base.js 

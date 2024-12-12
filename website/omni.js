@@ -26,6 +26,7 @@ var playhead = document.getElementById('playhead')
 var playhead_down = false
 var endBuffering = false
 var GLOBAL_VOLUME = 0.5
+var STREAM_MULTIPLIER = 1.0
 var QueueIndex = -1
 var Queue = []
 
@@ -362,8 +363,8 @@ async function play(omni_track, q_ind = -1, focus = false) {
 	// PlayingSong.streams.start.addEventListener("ended", endCheck)
 	PlayingSong.streams.mid.addEventListener("ended", endCheck)
 
-	PlayingSong.streams.start.volume = GLOBAL_VOLUME
-	PlayingSong.streams.mid.volume = GLOBAL_VOLUME
+	PlayingSong.streams.start.volume = calculatedVolume()
+	PlayingSong.streams.mid.volume = calculatedVolume()
 
 	Object.defineProperty(PlayingSong, "currentStream", {
 		get() {
@@ -389,8 +390,8 @@ async function play(omni_track, q_ind = -1, focus = false) {
 	function final_bit(this_track) {
 		if (PlayingSong.track == this_track) {
 			endBuffering = false
-			PlayingSong.streams.start.volume = GLOBAL_VOLUME
-			PlayingSong.streams.mid.volume = GLOBAL_VOLUME
+			PlayingSong.streams.start.volume = calculatedVolume()
+			PlayingSong.streams.mid.volume = calculatedVolume()
 			play_button.innerHTML = `<span class="material-icons">pause</span>`
 			document.title = `${omni_track.author.name} - ${omni_track.title} | Omni by Planet Bluto :)`
 
@@ -480,6 +481,7 @@ async function play(omni_track, q_ind = -1, focus = false) {
 
 	PlayingSong.streams.start.play().then(() => { final_bit(omni_track) })
 	SocketEventEmitter("status", {status: "UNPAUSE"})
+	sendScrobbleEvent("start")
 
 	played.push(omni_track.omni_track)
 
@@ -510,6 +512,7 @@ async function toggle_pause() {
 
 async function pause() {
 	SocketEventEmitter("status", {status: "PAUSE"})
+	sendScrobbleEvent("stop")
 	paused_saved_value = GLOBAL_VOLUME
 	await tween_volume(GLOBAL_VOLUME, 0, 200)
 	if (!PlayingSong.paused) {
@@ -522,6 +525,7 @@ async function pause() {
 
 async function unpause() {
 	SocketEventEmitter("status", {status: "UNPAUSE"})
+	sendScrobbleEvent("start")
 	if (PlayingSong.paused) {
 		PlayingSong.paused = false
 		// print("Ok??")

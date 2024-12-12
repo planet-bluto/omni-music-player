@@ -24,6 +24,7 @@
   "author": "Bluto",
   "license": "ISC",
   "dependencies": {
+    "@distube/ytdl-core": "^4.15.1",
     "@replit/database": "^2.0.5",
     "bandcamp-fetch": "^0.2.2-b.1",
     "bandcamp-scraper": "^1.5.0",
@@ -49,7 +50,6 @@
     "socket.io": "^4.7.1",
     "stream-length": "^1.0.2",
     "youtube-dl-exec": "^3.0.7",
-    "youtube-search-scraper": "^1.0.1",
-    "ytdl-core": "^4.11.5"
+    "youtube-search-scraper": "^1.0.1"
   }
 }

@@ -66,7 +66,7 @@ function playlistElem(playlist) {
 		showPopup({
 			"Show Tracks": (async () => {
 				startLoading("playlist")
-				var tracks = await fetchMultipleTracks(playlist.tracks)
+				var tracks = (playlist.unlazy ? playlist.tracks : (await fetchMultipleTracks(playlist.tracks)))
 				print(tracks)
 
 				var trackElems = tracks.map(track => trackElem(track, false))
@@ -78,7 +78,7 @@ function playlistElem(playlist) {
 			}),
 			"Play Shuffle": (async () => {
 				startLoading("playlist")
-				var tracks = await fetchMultipleTracks(playlist.tracks)
+				var tracks = (playlist.unlazy ? playlist.tracks : (await fetchMultipleTracks(playlist.tracks)))
 				tracks.shuffle()
 				// tracks = tracks.reverse()
 				print(tracks)
@@ -95,7 +95,7 @@ function playlistElem(playlist) {
 			}),
 			"Play Tracks Next": (async () => {
 				startLoading("playlist")
-				var tracks = await fetchMultipleTracks(playlist.tracks)
+				var tracks = (playlist.unlazy ? playlist.tracks : (await fetchMultipleTracks(playlist.tracks)))
 				// tracks = tracks.reverse()
 				print(tracks)
 
@@ -111,7 +111,7 @@ function playlistElem(playlist) {
 			}),
 			"Add Tracks to Queue": (async () => {
 				startLoading("playlist")
-				var tracks = await fetchMultipleTracks(playlist.tracks)
+				var tracks = (playlist.unlazy ? playlist.tracks : (await fetchMultipleTracks(playlist.tracks)))
 				// tracks = tracks.reverse()
 				print(tracks)
 
@@ -193,6 +193,23 @@ function tagElem(tag) {
 	return tag_elem.elem
 }
 
+window.OmniEvents = OmniEvents
+function sendScrobbleEvent(type) {
+	// let message = {
+	// 	sender: 'web-scrobbler',
+	// 	type,
+	// 	track: PlayingSong.track,
+	// }
+	// window.postMessage(
+	// 	message,
+	// 	'*',
+	// );
+
+	OmniEvents._fire("scrobble_event", type, PlayingSong.track)
+
+	// print(type, message)
+}
+
 var nowplaying_cache = null
 var duration_cache = null
 function emit_nowplaying(track) {
@@ -212,7 +229,7 @@ OmniEvents.on("nowplaying", track => {
 	canvasSetup(track.url)
 
 	// showToast(`Now playing: '${track.author.name} - ${track.title}'...`)
-
+	sendScrobbleEvent("start")
 	emit_nowplaying(track)
 })
 
@@ -265,6 +282,17 @@ if (query_params.includes("streaming")) {
 			callback(null)
 		}
 	})
+
+	socket.on("$stream_set_volume", (mult) => {
+		print("Received $stream_set_volume: ", mult)
+		// tween(duration, easingFunc, func, anim = true, FPS = 144)
+		let pre = clamp(STREAM_MULTIPLIER, 0, 1)
+		tween(tween_vol_durr, EASE_LINEAR, (x) => {
+			STREAM_MULTIPLIER = lerp(pre, mult, x)
+			STREAM_MULTIPLIER = clamp(STREAM_MULTIPLIER, 0, 1)
+			volUpdate()
+		}, false)
+	})
 }
 
 var cache = []
@@ -274,22 +302,23 @@ var cache = []
 
 // })
 
+function calculatedVolume() { return (GLOBAL_VOLUME * STREAM_MULTIPLIER) }
+
 function volUpdate(telementry = false) {
 	GLOBAL_VOLUME = clamp(GLOBAL_VOLUME, 0, 1)
 	if (PlayingSong != null) {
-		PlayingSong.streams.start.volume = GLOBAL_VOLUME
-		PlayingSong.streams.mid.volume = GLOBAL_VOLUME	
+		PlayingSong.streams.start.volume = calculatedVolume()
+		PlayingSong.streams.mid.volume = calculatedVolume()
 	}
 	if (telementry) {
-		print(`Set volume to ${GLOBAL_VOLUME*100.0}%`)
+		print(`Set volume to ${(GLOBAL_VOLUME * STREAM_MULTIPLIER)*100.0}%`)
 	}
 }
 
+const tween_vol_durr = 250
 var keylog = false
 document.addEventListener("keydown", event => {
 	if (keylog) { print(event.which) }
-
-	const tween_vol_durr = 250
 
 	var shift_mult = (event.shiftKey ? 5 : 1)
 
@@ -545,11 +574,7 @@ async function authCheck() {
 
 OmniEvents.on("logged_in", () => {
 	OmniAPI.loggedIn = true
-
-	OmniAPI.GET("/me/library").then(tracks => {
-		cache = tracks.map(track => track.omni_id)
-		OmniEvents._fire("cached", tracks)
-	})
+	switchPage("top-tracks")
 })
 
 authCheck()
@@ -962,6 +987,11 @@ async function switchPage( pageName, ...args ) {
 		case 'top-tracks':
 			startLoading("page")
 			pending_tracks = true
+			OmniAPI.GET("/me/library").then(tracks => {
+				cache = tracks.map(track => track.omni_id)
+				OmniEvents._fire("cached", tracks)
+			})
+
 			OmniEvents.on("cached", (tracks) => {
 				var trackElems = tracks.map(track => trackElem(track))
 				var res = render(trackElems, "top-tracks")
@@ -979,7 +1009,7 @@ async function switchPage( pageName, ...args ) {
 	}
 }
 
-switchPage("top-tracks")
+if (OmniAPI.loggedIn) { switchPage("top-tracks") }
 
 const PAGE_SHOW_POPUP = 0
 
@@ -1045,6 +1075,7 @@ async function fetchTracks(input) {
 	var proms = urls.map(url => socket.emitWithAck("fetchTracks", url))
 
 	var res = await Promise.all(proms)
+	res = res.filter(batch => batch != null)
 
 	res.forEach(async these_tracks => {
 		these_tracks = these_tracks.filter(track => track != null)
