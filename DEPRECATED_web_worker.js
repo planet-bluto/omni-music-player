@@ -27,7 +27,7 @@ async function getStream( thisURL, req_range ) {
   }
   
   const SOUNDCLOUD_HOSTNAMES = ["soundcloud.com"]
-  const YOUTUBE_HOSTNAMES = ["www.youtube.com", "youtu.be", "youtube.com"]
+  const YOUTUBE_HOSTNAMES = ["www.youtube.com", "youtu.be", "youtube.com", "music.youtube.com"]
 
   var song_length = 1000
   var mode = null

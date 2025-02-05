@@ -225,6 +225,7 @@ body::-webkit-scrollbar {
   width: calc(50% - 30px - 15px);
   left: 0;
   bottom: calc(0px + 20% + 15px);
+	margin-bottom: 0px;
 }
 
 #play-bar > p {
@@ -257,13 +258,32 @@ body::-webkit-scrollbar {
 	font-size: 48px !important; 
 	background: none;
 	border: none;
+	user-select: none;
+	-webkit-user-select: none;
 }
 
-#playhead {
+#playhead-cont {
+	display: flex;
 	position: absolute;
 	width: calc(50% - 30px - 15px);
   top: 80%;
   left: 15px;
+	gap: 15px;
+	height: 22px;
+  align-items: baseline;
+}
+
+#playhead-cont > p {
+	font-family: "Archivo Black";
+	font-size: 22px;
+	margin: 0px;
+	opacity: 0.5;
+}
+
+#playhead {
+	width: 100%;
+	user-select: none;
+	-webkit-user-select: none;
 }
 
 .track-elem[current] {
@@ -331,7 +351,7 @@ body::-webkit-scrollbar {
 
 .playlist-title {
 	font-family: "Archivo Black";
-	font-size: 48px;
+	font-size: 27px;
 	margin-left: 5px;
 }
 
@@ -353,7 +373,7 @@ body::-webkit-scrollbar {
 
 .tag-title {
 	font-family: "Archivo Black";
-	font-size: 48px;
+	font-size: 27px;
 	margin-left: 5px;
 }
 
@@ -544,6 +564,29 @@ body::-webkit-scrollbar {
 
 #main[render="items"] {
 	display: grid;
+	overflow-x: clip;
+	overflow-y: scroll;
+	grid-template-columns: repeat(var(--cell-count), var(--cell-size));
+	grid-auto-rows: var(--cell-size);
+	grid-auto-flow: row;
+	/* grid-template-rows: repeat(3, calc((var(--that_height) - 30px) / 3)); */
+	gap: 15px;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  padding-left: 15px;
+  padding-right: 15px;
+  width: calc(100% - 30px);
+}
+
+#main[render="items"] > * {
+	width: var(--cell-size);
+	height: var(--cell-size);
+	border-radius: 8px;
+}
+/* ------------- TRACKS ------------- */
+
+#main[render="mobile_items"] {
+	display: grid;
 	overflow-x: scroll;
 	overflow-y: clip;
 	grid-template-columns: repeat(var(--item-count), var(--that_height));
@@ -557,7 +600,7 @@ body::-webkit-scrollbar {
   width: calc(100% - 30px);
 }
 
-#main[render="items"] > * {
+#main[render="mobile_items"] > * {
 	width: 100%;
 	height: 100%;
 	border-radius: 8px;

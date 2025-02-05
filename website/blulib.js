@@ -59,7 +59,10 @@ class Elem {
 
 	watch(opts, func) {
 		var observer = new MutationObserver((mutations, thisObserver) => {
-			mutations.forEach(func)
+			let timestamp = Date.now()
+			mutations.forEach(mutation => {
+				func(timestamp, mutation)
+			})
 		})
 
 		observer.observe(this.elem, opts)

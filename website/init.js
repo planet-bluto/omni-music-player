@@ -118,6 +118,15 @@ new Elem("main").on("scroll", e => {
 	imageLoading()
 })
 
+var lastLoad = null
+new Elem("main").watch({childList: true, subtree: false}, (timestamp, mutation) => {
+	if (timestamp != lastLoad) {
+		lastLoad = timestamp
+		print("gulp: ", timestamp)
+		imageLoading()
+	}
+})
+
 function isElementInViewport (el) {
 
     // Special bonus for those using jQuery

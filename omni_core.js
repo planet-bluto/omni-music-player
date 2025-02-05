@@ -1,6 +1,7 @@
 const print = console.log
 
 var {spawn} = require('node:child_process')
+const { python } = require('pythonia')
 
 var {SuperOmniParser, OmniParser, MultiLoader} = require('omni-parser')
 var raw_omni_parse = OmniParser()
@@ -74,6 +75,7 @@ var express = require('express')
 const cors = require('cors')
 var jwt = require('jsonwebtoken')
 const { Stream } = require('stream')
+const fsExtra = require('fs-extra')
 
 const Scraper = require('youtube-search-scraper').default
 const YouTubeSearcher = new Scraper()
@@ -136,7 +138,7 @@ class OmniCoreClass {
 	  }
 	  
 	  const SOUNDCLOUD_HOSTNAMES = ["soundcloud.com"]
-	  const YOUTUBE_HOSTNAMES = ["www.youtube.com", "youtu.be", "youtube.com"]
+	  const YOUTUBE_HOSTNAMES = ["www.youtube.com", "youtu.be", "youtube.com", "music.youtube.com"]
 
 		async function fallbackYoutube(input, is_url = false) {
 			if (!is_url) {
@@ -214,7 +216,7 @@ var lastProgress = 0
 var lastDuration = Date.now()
 var lastStatus = "UNPAUSE"
 
-async function fetchLibrary() {
+async function fetchSoundcloudLibrary() {
 	let amount = null
 
 	if (amount == null) {
@@ -269,7 +271,7 @@ async function fetchLibrary() {
 						type: "SOUNDCLOUD",
 						title: track.title,
 						author: {name: track.user.username},
-						image: (track.artwork_url || track.user.avatar_url).replace("-large.jpg", "-t500x500.jpg"),
+						image: (track.artwork_url || track.user.avatar_url).replace("-large.", "-t500x500."),
 						url: track.permalink_url,
 						omni_id: `SC_${track.id}`,
 						service: {
@@ -283,10 +285,76 @@ async function fetchLibrary() {
 
 		// socket.emit("library", omni_tracks)
 		await fsPromise.writeFile("./soundcloud_likes.json", JSON.stringify(omni_tracks, null, 4), "utf-8")
-		print("Fetched Library!")
+		print("Fetched Library! (Soundcloud)")
 	} catch (err) {
 		print("fuck: ", err)
 	}
+}
+
+function artistJoin(artists) {
+	var toReturn = ""
+	for (let index = 0; index < artists.length; index++) {
+		var artist = artists[index]
+		if (index == 0) {
+			toReturn += artist
+		} else if (index == artists.length-1) {
+			if (artists.length == 2) {
+				toReturn += (" & " + artist)
+			} else {
+				toReturn += (", & " + artist)	
+			}
+		} else {
+			toReturn += (", " + artist)
+		}
+	}
+
+	return toReturn
+}
+
+async function fetchYoutubeLibrary() {
+// call and await python script to fetch raw youtube likes
+	// await python("./ytmusic.py") // PLEASE JUST WORK
+	var sub = spawn("python", ["ytmusic.py"])
+	
+	let code = await (new Promise((res, rej) => {
+		sub.on("close", code => {
+			res(code)
+		})
+	}))
+
+	print("youtube code: ", code)
+	// var ytmusic = await YTMusic("browser.json")
+	// ytmusic.get_library_songs(limit=1000)
+
+	var raw_youtube_likes = await fsExtra.readJson("raw_youtube_likes.json")
+	var omni_tracks = []
+	raw_youtube_likes.forEach(entry => {
+		omni_tracks.push({
+			type: "YOUTUBE",
+			title: entry.title,
+			author: {name: artistJoin(entry.artists.map(artist => artist.name))},
+			image: entry.thumbnails[entry.thumbnails.length-1].url,
+			url: `https://music.youtube.com/watch?v=${entry.videoId}`,
+			omni_id: `YT_${entry.videoId}`,
+			service: {
+					"id": entry.videoId,
+					"code": "YT",
+					"name": "YouTube"
+			}
+		})
+	})
+
+	await fsPromise.writeFile("./youtube_likes.json", JSON.stringify(omni_tracks, null, 4), "utf-8")
+	print("Fetched Library! (YouTube)")
+}
+
+async function fetchLibrary() {
+	var proms = Promise.all([
+		fetchSoundcloudLibrary(),
+		fetchYoutubeLibrary(),
+	])
+
+	return proms
 }
 
 fetchLibrary()
@@ -411,7 +479,7 @@ function SocketHandler(socket) {
 			// callback(playlist.tracks)
 			callback(playlist.tracks)
 		} else {
-			var test_tracks = require("./soundcloud_likes.json")
+			var test_tracks = await fsExtra.readJson("./soundcloud_likes.json")
 			callback(test_tracks)
 		}
 	})
@@ -484,4 +552,4 @@ function SocketHandler(socket) {
 
 var OmniCore = new OmniCoreClass()
 
-module.exports = OmniCore
+module.exports = {OmniCore, fetchLibrary}

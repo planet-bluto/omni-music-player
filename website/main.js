@@ -332,6 +332,10 @@ document.addEventListener("keydown", event => {
 	}
 
 	if (document.activeElement != document.body) { return }
+	if (event.which >= 48 && event.which <= 57) {
+		var val = event.which - 48
+		PlayingSong.currentStream.currentTime = (PlayingSong.currentStream.duration / 10) * val
+	}
 	switch (event.which) {
 		case 40:
 			GLOBAL_VOLUME -= 0.02*shift_mult
@@ -366,10 +370,14 @@ document.addEventListener("keydown", event => {
 			toggle_pause()
 		break;
 		case 39:
-			if (event.shiftKey) { next() }
+			if (event.shiftKey) { next() } else {
+				PlayingSong.currentStream.currentTime += 5
+			}
 		break;
 		case 37:
-			if (event.shiftKey) { prev() }
+			if (event.shiftKey) { prev() } else {
+				PlayingSong.currentStream.currentTime -= 5
+			}
 		break;
 		case 82:
 			if (event.shiftKey) {
@@ -389,6 +397,9 @@ var menu_toggles = [
 	document.getElementById('loop-button'),
 	document.getElementById('shuffle-button'),
 	document.getElementById('playing-track-cont'),
+	document.getElementById('playhead-cont'),
+	document.getElementById('time-progress'),
+	document.getElementById('time-total'),
 ]
 var bottom_area_opened = false
 var bottom_area_moving = false
@@ -467,6 +478,8 @@ document.getElementById('close-menu-button').onclick = e => {
 	}
 }
 
+menu_toggles.forEach(elem => { elem.style["display"] = "none" })
+
 function resizePlayingTrackCont() {
 	var playing_track_cont = document.getElementById('playing-track-cont')
 
@@ -496,11 +509,24 @@ function resizeCheck() {
 	var main_elem = document.getElementById("main")
 	print(`HEIGHT CHECK !!\n${main_elem.clientHeight}px;`)
 	main_elem.style.setProperty("--this_height", `${main_elem.clientHeight}px`)
+
+	let gap = 15
+	let goal_amount = Math.floor((main_elem.clientWidth) / 250)
+	
+	// main_elem.style.setProperty("--cell-count", `${Math.floor((main_elem.clientWidth - (gap)) / (200+gap))}`)
+	main_elem.style.setProperty("--cell-count", `${goal_amount}`)
+	main_elem.style.setProperty("--cell-size", `${Math.floor((main_elem.clientWidth - (2 * gap) - ((goal_amount - 1) * gap)) / goal_amount)}px`)
 	// main_elem.style["--this_height"] = `${main_elem.clientHeight}px;`
 
 	resizePlayingTrackCont()
 }
 resizeCheck()
+
+window.addEventListener('keydown', function(e) {
+  if(e.code == "Space" && e.target == document.getElementById("main")) {
+    e.preventDefault()
+  }
+})
 
 function showAuthPopup() {
 	stopLoading("auth")
@@ -665,6 +691,10 @@ function trackPopups(track) {
 		}),
 		"Copy Link": (() => {
 			navigator.clipboard.writeText(track.url)
+			closePopup()
+		}),
+		"Copy Download Link": (() => {
+			navigator.clipboard.writeText(`https://omni.planet-bluto.net/download/${track.omni_id}.mp3`)
 			closePopup()
 		}),
 		"Open In New Tab": (() => {

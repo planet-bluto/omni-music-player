@@ -107,17 +107,31 @@ function canvasSetup(url) {
 	if (!query_params.includes("mobile") && !query_params.includes("streaming")) { renderFrame() }
 }
 
+function makeTimestamp(ms) {
+	let sec = ms / 1000
+	let minutes = Math.floor(sec / 60.0)
+	let seconds = sec - (minutes*60.0)
+
+	return (minutes + ":" + String(Math.round(seconds)).padStart(2, "0"))
+}
+
 var last_emit_progress = null
 async function playheadRender(e = null) {
 	if (PlayingSong != null) {
 		var new_val = (PlayingSong.currentStream.currentTime / PlayingSong.currentStream.duration) * 100
-		if ((new_val > 99.8) || (PlayingSong.currentStream.readyState == 2)) {
-			await wait(800)
+		if ((new_val > 99.8)) {
+			let ms_left = (PlayingSong.currentStream.duration - PlayingSong.currentStream.currentTime) * 1000.0
+			await wait(ms_left)
 			endCheck()
 		}
 		// print(new_val)
+		let timeProgressLabel = new Elem("time-progress")
+		timeProgressLabel.text = makeTimestamp(((new_val / 100.0) * PlayingSong.currentStream.duration) * 1000.0)
 		if (!playhead_down) {
 			playhead.value = new_val
+			let timeTotalLabel = new Elem("time-total")
+			timeTotalLabel.text = makeTimestamp(PlayingSong.currentStream.duration * 1000.0)
+
 			var prog_to_emit = (new_val/100)
 			if (query_params.includes("nowplaying")) {
 				if (prog_to_emit != last_emit_progress) {
@@ -132,7 +146,7 @@ async function playheadRender(e = null) {
 function endCheck() {
 	print("checkings")
 	if (!endBuffering) {
-		print("1")
+		print("# PENIR")
 		endBuffering = true
 		next()
 	}
@@ -142,7 +156,7 @@ function focusNowPlaying() {
 	var id = encodeURIComponent(PlayingSong.track.url)
 	var this_track = document.getElementsByClassName(`track-${id}`)[0]
 	// print("EXPLOSION (DIE EXPLODE AHAHAHAHAHA")
-	document.getElementById("main").scrollTo({left: this_track.offsetLeft-(window.innerWidth/2)+(this_track.clientWidth/2), behavior: "smooth"})
+	document.getElementById("main").scrollTo({top: this_track.offsetTop-(window.innerHeight/2)+(this_track.clientHeight/2), behavior: "smooth"})
 }
 
 function setQueueIndex(ind) {

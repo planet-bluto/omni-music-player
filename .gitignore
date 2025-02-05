@@ -7,3 +7,12 @@ credentials.json
 
 # It doesn't exist, I don't see it
 1733983992760-base.js 
+browser.json
+youtube_likes.json
+raw_youtube_likes.json
+soundcloud_likes.json
+oauth.json
+/__pycache__
+yarn.lock
+setupyt.py
+ytclient.json

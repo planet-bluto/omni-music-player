@@ -7,6 +7,7 @@ const hyperid = require('hyperid')
 var saltRounds = (process.env.BCRYPT_SALT_ROUNDS || 10)
 
 var {OmniParser, MultiLoader} = require('omni-parser')
+const fsExtra = require('fs-extra')
 var raw_omni_parse = OmniParser()
 var raw_multi_load = MultiLoader()
 
@@ -452,16 +453,45 @@ module.exports = (omniCore => {
 		res.send(response)
 	})
 
-	function getLikesPlaylist() {
-		var likes_tracks = require("./soundcloud_likes.json")
+	async function getLikesPlaylist() {
+		var sc_likes_tracks = await fsExtra.readJSON("./soundcloud_likes.json")
+		var yt_likes_tracks = await fsExtra.readJSON("./youtube_likes.json")
 		return {
 			id: "likes", 
-			title: "Soundcloud Likes",
-			desc: "All likes from Soundcloud!",
+			title: "Likes Playlist",
+			desc: "All likes from Everywhere!!",
 			owner: "all",
 			visibility: 0,
 			unlazy: true,
-			tracks: likes_tracks
+			tracks: (sc_likes_tracks.concat(yt_likes_tracks))
+		}
+	}
+
+	async function getSCLikesPlaylist() {
+		var sc_likes_tracks = await fsExtra.readJSON("./soundcloud_likes.json")
+		// var yt_likes_tracks = await fsExtra.readJSON("./youtube_likes.json")
+		return {
+			id: "likes_sc", 
+			title: "SoundCloud Likes",
+			desc: "All likes from Soundcloud",
+			owner: "all",
+			visibility: 0,
+			unlazy: true,
+			tracks: (sc_likes_tracks)
+		}
+	}
+
+	async function getYTLikesPlaylist() {
+		// var sc_likes_tracks = await fsExtra.readJSON("./soundcloud_likes.json")
+		var yt_likes_tracks = await fsExtra.readJSON("./youtube_likes.json")
+		return {
+			id: "likes_yt", 
+			title: "YouTube Likes",
+			desc: "All likes from YouTube",
+			owner: "all",
+			visibility: 0,
+			unlazy: true,
+			tracks: (yt_likes_tracks)
 		}
 	}
 	
@@ -474,7 +504,9 @@ module.exports = (omniCore => {
 			playlistObjs = await Promise.all(userObj.playlists.map(playlist_id => DB.fetch(`playlists/${playlist_id}`)))
 			playlistObjs = playlistObjs.map(playlistObj => playlistObj.data)
 			playlistObjs.reverse()
-			playlistObjs.unshift(getLikesPlaylist())
+			playlistObjs.unshift((await getYTLikesPlaylist()))
+			playlistObjs.unshift((await getSCLikesPlaylist()))
+			playlistObjs.unshift((await getLikesPlaylist()))
 		}
 
 		res.send(playlistObjs)
@@ -527,7 +559,11 @@ module.exports = (omniCore => {
 	// ENDPOINT: GET playlist //
 	unauthGET("/playlist/:id", async (req, res) => {
 		if (req.params.id == "likes") {
-			res.send(getLikesPlaylist())
+			res.send((await getLikesPlaylist()))
+		} else if (req.params.id == "likes_sc") {
+			res.send((await getSCLikesPlaylist()))
+		} else if (req.params.id == "likes_yt") {
+			res.send((await getYTLikesPlaylist()))
 		} else {
 			var playlistDB = await DB.fetch(`playlists/${req.params.id}`)
 			res.send(playlistDB.data)
@@ -537,9 +573,10 @@ module.exports = (omniCore => {
 	// ENDPOINT: GET library //
 	authGET("/me/library", async (userDB, req, res) => {
 		if (true) {
-			var test_tracks = require("./soundcloud_likes.json")
+			var sc_test_tracks = await fsExtra.readJSON("./soundcloud_likes.json")
+			var yt_test_tracks = await fsExtra.readJSON("./youtube_likes.json")
 
-			res.send(test_tracks)
+			res.send(sc_test_tracks.concat(yt_test_tracks))
 		} else {
 			var userObj = userDB.data
 
