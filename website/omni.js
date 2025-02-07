@@ -261,9 +261,9 @@ function insertTracksToQueue(tracks, ind, playing = (Queue.length == 0)) {
 		da_length = Array.from(queue_cont.children).length-1
 		if (!append_mode) {
 			var _before = queue_cont.children[ind]
-			queue_cont.insertBefore(queue_item, _before) 
+			// queue_cont.insertBefore(queue_item, _before)
 		} else {
-			queue_cont.appendChild(queue_item)
+			// queue_cont.appendChild(queue_item)
 		}
 
 		if (this_ind == 0) {
@@ -297,7 +297,7 @@ function moveQueueItem(ind1, ind2, naah = false) {
 	ind2 = Math.min(ind2, Queue.length-1)
 
 	Queue.move(ind1, ind2)
-	new Elem("queue").moveChild(ind1, ind2)
+	// new Elem("queue").moveChild(ind1, ind2)
 	// ind2 -= (ind1 < ind2 ? 1 : 0)
 
 	if (ind1 == QueueIndex && naah) {
@@ -307,13 +307,52 @@ function moveQueueItem(ind1, ind2, naah = false) {
 
 function removeQueueItem(ind) {
 	var track = Queue.remove(ind)
-	new Elem("queue").children[ind].delete()
+	// new Elem("queue").children[ind].delete()
 
 	if (ind < QueueIndex) {
 		QueueIndex -= 1
 	}
 
 	return track
+}
+
+var prevQueue = "[]"
+function queueUpdateCheck() {
+	let queue_ids = JSON.stringify(Queue.map(track => track.omni_id))
+	// print(prevQueue, queue_ids)
+	if (prevQueue != queue_ids) {
+		prevQueue = queue_ids
+		print("Queue updated!")
+
+		var queue_cont = new Elem("queue")
+		queue_cont.clear()
+		Queue.forEach((track, ind) => {
+			var elem = new Elem(buildQueueItem(track))
+			if (QueueIndex == ind) { elem.setAttr("current", "") }
+			queue_cont.addChild(elem)
+		})
+
+		preloadNextTrack()
+	}
+
+	requestAnimationFrame(queueUpdateCheck)
+}
+
+queueUpdateCheck()
+
+var nextTrackLoaded = null
+function preloadNextTrack() {
+	if (QueueIndex+1 < Queue.length) {
+		var track = Queue[QueueIndex+1]
+		if (nextTrackLoaded != track.omni_id && nextTrackLoaded != ("LOADING_"+track.omni_id)) {
+			print("Preloading next track...")
+			nextTrackLoaded = ("LOADING_"+track.omni_id)
+			let streamUrl = streamurl(track.url, false)
+			fetch(streamUrl).then(res => {
+				print("Next Track Loaded!", res)
+			})
+		}
+	}
 }
 
 function shuffleQueue() {
@@ -343,6 +382,8 @@ async function play(omni_track, q_ind = -1, focus = false) {
 	} else if (q_ind != -1) {
 		setQueueIndex(q_ind)
 	}
+
+	preloadNextTrack()
 	var { url, streams } = omni_track
 	if (PlayingSong != null) {
 		["start", "mid"].forEach(soos => {
@@ -715,18 +756,19 @@ function stream(track, start = false) {
 	var {url} = track
 	var elem;
 
-	if (start) {
-		elem = new Audio(`/mediastart?url=${encodeURIComponent(url)}`)
-		// elem = new Audio(url)
-		elem.setAttribute("type", "start")
-	} else {
-		elem = new Audio(`/media?url=${encodeURIComponent(url)}`)
-		// elem = new Audio(url)
-		elem.setAttribute("type", "mid")
-	}
+	elem = new Audio(streamurl(url, start))
+	elem.setAttribute("type", (start ? "start" : "mid"))
 
 	if (OUTPUT_ID) {
 		elem.setSinkId(OUTPUT_ID)
 	}
 	return elem
+}
+
+function streamurl(url, start = false) {
+	if (start) {
+		return `/mediastart?url=${encodeURIComponent(url)}`
+	} else {
+		return `/media?url=${encodeURIComponent(url)}`
+	}
 }
