@@ -335,7 +335,7 @@ function queueUpdateCheck() {
 		preloadNextTrack()
 	}
 
-	requestAnimationFrame(queueUpdateCheck)
+	setTimeout(queueUpdateCheck, 16)
 }
 
 queueUpdateCheck()
