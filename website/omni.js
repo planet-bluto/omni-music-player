@@ -326,6 +326,7 @@ function queueUpdateCheck() {
 
 		var queue_cont = new Elem("queue")
 		queue_cont.clear()
+		Queue = Queue.filter(track => track != null)
 		Queue.forEach((track, ind) => {
 			var elem = new Elem(buildQueueItem(track))
 			if (QueueIndex == ind) { elem.setAttr("current", "") }
